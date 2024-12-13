@@ -1,0 +1,40 @@
+== Ayarlar
+Uygulama ayarları, ortak kod tanımları, proxy sunucuları ve veri kaynaklarının ayarlandığı bölümdür.
+
+.Uygulama Ayarları Menüsü
+image::settings_menu_01.png[Uygulama Ayarları Menüsü]
+
+
+=== Uygulama Ayarları
+
+Uygulama ayarlarının düzenlendiği ve yeni ayarların eklendiği bölümdür.
+Uygulama adı ve anahtar ile filtreleme özelliği bulunur.
+
+.Uygulama Ayarları
+image::application_settings_01.jpeg[Uygulama Ayarları]
+
+
+=== Proxy Sunucular
+
+Uygulamada kullanılacak proxy sunucularının oluşturulduğu ve düzenlendiği sayfadır.
+
+
+.Proxy Sunucu Listeleme
+image::proxy_server_01.jpeg[Proxy Sunucu Listeleme]
+
+.Proxy Sunucu Görüntüleme
+image::proxy_server_02.jpeg[Proxy Sunucu Görüntüleme]
+
+.Proxy Sunucu Düzenleme
+image::proxy_server_03.jpeg[Proxy Sunucu Düzenleme]
+
+
+=== Önbellek Yönetimi
+
+Uygulamadaki önbellek temizleme işlemi buradaki butonlar ile cache üzerinden veri çekebilir, cache temizleyebilir, cache üzerindeki veri sayısı görülebilir.
+
+.Önbellek Yönetimi Listleme
+image::cache_management_tr_01.jpeg[Önbellek Yönetimi Listleme]
+
+.Önbellek Yönetimi Detayı
+image::cache_management_tr_02.jpeg[Önbellek Yönetimi Detayı]

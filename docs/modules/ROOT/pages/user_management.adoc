@@ -1,0 +1,36 @@
+== Kullanıcı Arayüzü -> Kullanıcı Yönetimi
+Kullanıcıların, sistemdeki rol  ve kullanıcı yönetimini gerçekleştirdiği ekrandır.
+
+=== Kullanıcılar
+Admin kullanıcıları, sistemde kullanıcı oluşturma, güncelleme ve rollerinde değişiklikler yapabilirler.
+
+.Kullanıcılar Listeleme
+image::user_management_list.png[Kullanıcılar Listeleme]
+
+.Kullanıcı Oluşturma
+image::user_management_create.png[Kullanıcı Oluşturma]
+
+|===
+|Alan |Tanım
+|Ad|Ad bilgisi
+|Soyad|Soyad bilgisi
+|E-posta|E-posta bilgisi
+|Durum|Kullanıcı aktif,aktif değil bilgisi
+|Rol|Kullanıcıya verilecek rol bilgisi seçilmelidir
+|Internal (LDAP) Kullanıcı mı?|Internal kullanıcıysa işaretlenerek sicil id bilgisi girilmelidir
+|===
+
+=== Roller
+Admin kullanıcıları, Katalog rollerini olusturarak gerekli düzenlemeleri gerçekleştirdiği ekrandır.
+
+Katalog rolleri aşağıdaki gibi listelenmektedir.
+
+.Roller Listeleme
+image::user_management_roles_list.png[Roller Listeleme]
+
+Katalog rollerine yeni bir rol eklemek için "Yeni Rol Ekle" butonuna tıklanır.
+
+.Roller Oluşturma
+image::user_management_roles_create.png[Roller Oluşturma]
+
+Belirlenen rol matrisine göre yetki düzenlemesi "İzinler" kısmından yapılır.

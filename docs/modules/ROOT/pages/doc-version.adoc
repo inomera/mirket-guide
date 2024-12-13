@@ -1,0 +1,54 @@
+== Doküman Sürüm Geçmişi
+
+=== Tarihçe
+
+[cols="1, 1, 1, 3a",options=header]
+|===
+|Versiyon
+|Yazar
+|Tarih
+|Açıklama
+
+|1
+|Inomera
+|20.02.2020
+|İlk sürüm
+
+|2
+|Inomera
+|18.07.2021
+|İkinci sürüm
+
+|3
+|Inomera
+|07.09.2022
+|Üçüncü sürüm
+
+|4
+|Inomera
+|19.09.2022
+|Dördüncü sürüm
+
+|5
+|Inomera
+|12.09.2022
+|Beşinci sürüm
+
+|6
+|Inomera
+|14.03.2023
+|Altıncı sürüm
+
+|7
+|Inomera
+|13.12.2024
+|Yedinci sürüm
+|===
+
+=== Kısaltmalar / Muadiller
+
+[cols="1a, 3"]
+|===
+|**Gateway** |Ağ Geçidi
+|===
+

@@ -1,0 +1,2816 @@
+== Örnek Kodlar
+:hardbreaks-option:
+
+=== Basit Yönlendirme + Önbellek
+
+Basit yönlendirme, isteğin tek bir sunucuya gitmesidir. Atılan istek belirli bir backend URI'ye yönlendirilir.
+
+==== API Oluşturma ve Test
+
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+*Yeni API Oluştur* butonuna tıklanır.
+*Tanım* sekmesinde aşağıdaki bilgiler doldurulur:
+====
+*Ad:* Simple Routing
+*Açıklama:* Simple Routing API
+*Durum:* Aktif
+*Tip:* REST
+*EndPoint:* `/posts/{id}`
+*Metot:* GET
+*Asenkron mu?:* Hayır
+====
+
+.API Oluşturma
+image::simple_routing_api_create.png[API Oluşturma]
+
+*Yönlendirme* sekmesine tıklanır ve *Basit Yönlendirme* seçilir.
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend Http Metot:* GET
+*BackendUri:* `https://jsonplaceholder.typicode.com/posts/{id}` (Oluşturulan API'nin yönlendirileceği URI)
+====
+
+.Yönlendirme
+image::simple_routing_api_create_routing_tab.png[Yönlendirme]
+
+*Önbellek* sekmesine tıklanır.
+Önbelleği aktifleştir kutucuğu işaretlenir ve aşağıdaki alanlar doldurulur:
+
+====
+*Önbellek Zamanaşımı (Saniye):* 20
+
+*Başarı Kuralı:*
+
+* *Backend Protokolü:* HTTP
+* *Kural Tipi:* HTTP Durumu
+* *En Küçük Değer:* 200
+* *En Büyük Değer:* 226
+====
+
+.Önbellek
+image::simple_routing_cache.png[Önbellek]
+
+*Kaydet* butonuna tıklanır.
+
+* Test
++
+--
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+Oluşturulan API'nin *güncelle* butonuna tıklanır.
+*Test* sekmesine tıklanır.
+*İstek -> Parametreler -> Path Parametreleri* bölümünde *id* anahtarının karşısına bir değer girilir, örneğin 1.
+Çalıştır'a tıklanır.
+API'den dönen cevap görülür.
+
+.Basit Yönlendirme Test
+image::simple_routing_test_tab.png[Basit Yönlendirme Test]
+
+Servis gateway üzerinden tetiklendiğinde başarıyla backend API tetiklenir.
+Servis 20 saniye içerisinde tekrar aynı parametreler ile tetiklendiğinde backend API tetiklenmez. Önbellekteki cevabın başarı ile dönüldüğü gözlemlenir.
+20 saniye geçtikten sonra servis aynı parametreler ile tetiklendiğinde backend API’nin çağırıldığı gözlemlenir.
+Farklı URL parametreleri ile servis tetiklendiğinde önbellekteki değerin dönülmediği görülür.
+--
+
+=== Round Robin Yük Dağıtımı
+
+Tüm backend’lerin aynı kapasitede ve özelliklerde olduğu durumda, isteklerin sırayla farklı backend’lere gönderilmesi için kullanılır.
+
+==== API Oluşturma ve Test
+
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+*Yeni API Oluştur* butonuna tıklanır.
+*Tanım* sekmesinde aşağıdaki bilgiler doldurulur:
+====
+*Ad:* Round Robin Load Balancing
+*Açıklama:* Round Robin Load Balancing API
+*Durum:* Aktif
+*Tip:* REST
+*EndPoint:* `/round-robin`
+*Metot:* GET
+*Asenkron mu?:* Hayır
+====
+
+.API Oluşturma
+image::round-robin_api_create.png[API Oluşturma]
+
+*Yönlendirme* sekmesine tıklanır ve *Yük Dağıtımı ile Yönlendirme* seçilir.
+Yük dağıtım stratejisi olarak *Round Robin* seçilir.
+
+Backend'de `rest/gets/v10/first` API'si olduğu varsayılır. Aynı backend farklı portlarda (12107, 12109, 12110) ya da farklı sunucularda aynı portta birden fazla instance olarak ayağa kaldırılır.
+
+*Backend URL ekleme* butonuna tıklanır.
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/rest/gets/v10/first` (İsteklerin gönderileceği URL)
+
+*Backend URL:* `http://localhost:12109/rest/gets/v10/first`
+
+*Backend URL:* `http://localhost:12110/rest/gets/v10/first`
+====
+
+.Backend URL Ekleme
+image::round_robin_add_backend_url.png[Backend URL Ekleme]
+
+.Yönlendirme
+image::round-robin_api_create_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *GET* seçilir.
+*Kaydet* butonuna tıklanır.
+
+* Test
++
+--
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+Oluşturulan API'nin *güncelle* butonuna tıklanır.
+*Test* sekmesine tıklanır.
+Çalıştır'a tıklanır.
+
+Çalıştır butonuna her tıklandığında isteklerin sırayla farklı backend’lere gönderildiği görülür.
+--
+
+=== Ağırlıklı Yük Dağıtımı
+
+Yükün belirli oranlarda backend URL’lere dağıtılmasını sağlar. Örneğin gelen trafiğin %25’inin bir backend’e, %75’inin başka bir backend’e iletilmesi sağlanabilir.
+
+==== API Oluşturma ve Test
+
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+*Yeni API Oluştur* butonuna tıklanır.
+*Tanım* sekmesinde aşağıdaki bilgiler doldurulur:
+====
+*Ad:* Weighted Load Balancing
+*Açıklama:* Weighted Load Balancing API
+*Durum:* Aktif
+*Tip:* REST
+*EndPoint:* `/weighted`
+*Metot:* GET
+*Asenkron mu?:* Hayır
+====
+
+.API Oluşturma
+image::weighted_api_create.png[API Oluşturma]
+
+*Yönlendirme* sekmesine tıklanır ve *Yük Dağıtımı ile Yönlendirme* seçilir.
+Yük dağıtım stratejisi olarak *Weighted* seçilir.
+
+Backend'de `rest/gets/v10/first` API'si olduğu varsayılır. Aynı backend farklı portlarda (12107, 12109) ya da farklı sunucularda aynı portta birden fazla instance olarak ayağa kaldırılır.
+
+*Backend URL ekleme* butonuna tıklanır.
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/rest/gets/v10/first` (İsteklerin gönderileceği URL)
+*Ağırlık:* 1 (Backend'e gidecek isteklerin oranı)
+
+*Backend URL:* `http://localhost:12109/rest/gets/v10/first`
+*Ağırlık:* 3
+====
+
+.Backend URL Ekleme
+image::weighted_add_backend_url.png[Backend URL Ekleme]
+
+.Yönlendirme
+image::weighted_api_create_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *GET* seçilir.
+*Kaydet* butonuna tıklanır.
+
+* Test
++
+--
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+Oluşturulan API'nin *güncelle* butonuna tıklanır.
+*Test* sekmesine tıklanır.
+Çalıştır'a tıklanır.
+
+Çalıştır butonuna tıklandığında isteklerin backend'lere 1 - 3 oranında dağıldığı görülür. Mesela 100 istek atıldığını varsayalım. 25 istek bir backend'e gönderilirken 75 istek diğer backend'e gönderilir.
+--
+
+=== A/B Test
+
+Belirli kriterlere göre seçilmiş belirli bir grubu her zaman aynı backend URL’ine göndermek için kullanılır. Örneğin bir mikroservisin yeni devreye alınmış bir versiyonu ile eski versiyonu aynı anda ayakta olduğu durumda, sadece belli müşterileri seçerek bu müşterilerin API isteklerini yeni versiyona, diğer müşterilerin isteklerini eski versiyona iletmek için kullanılabilir.
+
+==== API Oluşturma ve Test
+
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+*Yeni API Oluştur* butonuna tıklanır.
+*Tanım* sekmesinde aşağıdaki bilgiler doldurulur:
+====
+*Ad:* A/B Testing
+*Açıklama:* A/B Testing
+*Durum:* Aktif
+*Tip:* REST
+*EndPoint:* `/ab`
+*Metot:* GET
+*Asenkron mu?:* Hayır
+====
+
+.API Oluşturma
+image::ab_test_api_create.png[API Oluşturma]
+
+*Yönlendirme* sekmesine tıklanır ve *Yük Dağıtımı ile Yönlendirme* seçilir.
+Yük dağıtım stratejisi olarak *A/B Testing* seçilir.
+Backend'de `rest/gets/v10/first` API'si olduğu varsayılır. Aynı backend farklı portlarda (12107, 12109) ya da farklı sunucularda aynı portta birden fazla instance olarak ayağa kaldırılır.
+*Backend URL ekleme* butonuna tıklanır.
+
+* Değer kaynağının *İstek Başlığı* seçildiği durum:
++
+--
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/rest/gets/v10/first`
+*Değer Kaynağı:* İstek Başlığı
+*İstek Başlığı İsmi:* `X-Forwarded-For`
+*Beklenen Değer:* `88.11.23.35`
+*Değer Operatörü:* Eşittir
+*Default Backend:* Hayır
+
+*Backend URL:* `http://localhost:12109/rest/gets/v10/first`
+*Değer Kaynağı:* İstek Başlığı
+*İstek Başlığı İsmi:* `X-Forwarded-For`
+*Beklenen Değer:* `88.11.23.35`
+*Değer Operatörü:* Eşit değildir
+*Default Backend:* Evet
+====
+
+.Backend URL Ekleme
+image::ab_request_header_backend_url.png[Backend URL Ekleme]
+
+.Yönlendirme
+image::ab_request_header_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *GET* seçilir.
+*Kaydet* butonuna tıklanır.
+
+** Test
+
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+Oluşturulan API'nin *güncelle* butonuna tıklanır.
+*Test* sekmesine tıklanır.
+*İstek -> Başlıklar -> API İsteği Başlıkları* bölümünde *X-Forwarded-For* anahtarının karşısına *88.11.23.35* değeri girilir. Çalıştır'a tıklanır.
+Atılan isteğin 12107 portlu backend'e gönderildiği görülür.
+*X-Forwarded-For* anahtarının karşısına farklı bir değer girilir ve çalıştıra tıklanır.
+Atılan isteğin 12109 portlu backend'e gönderildiği görülür.
+--
+
+* Değer kaynağının *Sorgu Dizesi Parametresi* seçildiği durum:
++
+--
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/rest/gets/v10/first`
+*Değer Kaynağı:* Sorgu Dizesi Parametresi
+*Sorgu Dizesi Parametre Adı:* `priority`
+*Beklenen Değer:* `1`
+*Değer Operatörü:* Eşittir
+*Default Backend:* Hayır
+
+*Backend URL:* `http://localhost:12109/rest/gets/v10/first`
+*Değer Kaynağı:* Sorgu Dizesi Parametresi
+*Sorgu Dizesi Parametre Adı:* `priority`
+*Beklenen Değer:* `1`
+*Değer Operatörü:* Eşit değildir
+*Default Backend:* Evet
+====
+
+.Backend URL Ekleme
+image::ab_request_query_param_backend_url.png[Backend URL Ekleme]
+
+.Yönlendirme
+image::ab_request_query_param_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *GET* seçilir.
+*Kaydet* butonuna tıklanır.
+
+** Test
+
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+Oluşturulan API'nin *güncelle* butonuna tıklanır.
+*Test* sekmesine tıklanır.
+*İstek -> Parametreler -> API Sorgu Parametreleri* bölümünde *priority* anahtarının karşısına *1* değeri girilir. Çalıştır'a tıklanır.
+Atılan isteğin 12107 portlu backend'e gönderildiği görülür.
+*priority* anahtarının karşısına farklı bir değer girilir ve çalıştıra tıklanır.
+Atılan isteğin 12109 portlu backend'e gönderildiği görülür.
+--
+
+* Değer kaynağının *İstek Gövdesi JsonPath* seçildiği durum:
++
+--
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/rest/gets/v10/first`
+*Değer Kaynağı:* İstek Gövdesi JsonPath
+*JSON Path:* `$.msisdn`
+*Beklenen Değer:* `905554443322`
+*Değer Operatörü:* Eşittir
+*Default Backend:* Hayır
+
+*Backend URL:* `http://localhost:12109/rest/gets/v10/first`
+*Değer Kaynağı:* İstek Gövdesi JsonPath
+*JSON Path:* `$.msisdn`
+*Beklenen Değer:* `905554443322`
+*Değer Operatörü:* Eşit değildir
+*Default Backend:* Evet
+====
+
+.Backend URL Ekleme
+image::ab_json_path_backend_url.png[Backend URL Ekleme]
+
+.Yönlendirme
+image::ab_json_path_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *GET* seçilir.
+*Kaydet* butonuna tıklanır.
+
+** Test
+
+Postman veya benzeri bir REST client üzerinden aşağıdaki gibi bir istek oluşturulur.
+Gövde kısmına aşağıdaki json değeri girilir ve `http://localhost:12102/ab` URL'ine istek atılır.
+
+[source,json]
+{
+    "offerKey": "OFR1234",
+    "msisdn": "905554443322"
+}
+
+Atılan isteğin 12107 portlu backend'e gönderildiği görülür.
+*msisdn* parametresinin karşısına farklı bir değer girilir ve istek atılır.
+Atılan isteğin 12109 portlu backend'e gönderildiği görülür.
+
+.A/B Testing
+image::ab_test_json_path_with_postman.png[A/B Testing]
+--
+
+* Değer kaynağının *İstek Gövdesi XPath* seçildiği durum:
++
+--
+** API Oluşturma
+
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+*Yeni API Oluştur* butonuna tıklanır.
+*Tanım* sekmesinde aşağıdaki bilgiler doldurulur:
+====
+*Ad:* A/B Testing
+*Açıklama:* A/B Testing
+*Durum:* Aktif
+*Tip:* SOAP
+*EndPoint:* `/ab`
+*Metot:* getGenres
+*Asenkron mu?:* Hayır
+====
+
+.API Oluşturma
+image::ab_xpath_api_create.png[API Oluşturma]
+
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/soap/posts/v10/first`
+*Değer Kaynağı:* İstek Gövdesi XPath
+*XPath:* `Envelope/Body/getGenres/username[text()]`
+*Beklenen Değer:* `ttm_ios`
+*Değer Operatörü:* Eşittir
+*Default Backend:* Hayır
+
+*Backend URL:* `http://localhost:12109/soap/posts/v10/first`
+*Değer Kaynağı:* İstek Gövdesi XPath
+*XPath:* `Envelope/Body/getGenres/username[text()]`
+*Beklenen Değer:* `ttm_ios`
+*Değer Operatörü:* Eşit değildir
+*Default Backend:* Evet
+====
+
+.Backend URL Ekleme
+image::ab_xpath_backend_url.png[Backend URL Ekleme]
+
+.Yönlendirme
+image::ab_xpath_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *POST* seçilir.
+*Kaydet* butonuna tıklanır.
+
+** Test
+
+SoapUI veya benzeri bir SOAP Client üzerinden `http://localhost:12102/ab` URL'ine aşağıdaki istek atılır:
+[source,xml]
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsdl="http://ttmuzikfuncs.proarge.com/wsdl/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <wsdl:getGenres>
+         <username>ttm_ios</username>
+         <password>l1st4n_7he_mu5ic!</password>
+         <!--Optional:-->
+         <cdata>1</cdata>
+      </wsdl:getGenres>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+SOAP isteğinde *username* alanı *ttm_ios* olan isteklerin 12107 portlu backend'e, *username* alanı *ttm_ios*'tan farklı olan isteklerin 12109 portlu backend'e gönderildiği görülür.
+--
+
+* Değer kaynağının *İş Nesnesi Alanı* seçildiği durum:
++
+--
+*Katalog -> API Kullanıcıları* ekranında tanımlı, `ID` değeri `451fa26738a04a39b95e79fcaf6c6fa2`, `apiKey` değeri `f5a66a64-6e7c-4041-84e7-4d62e96fb7dc` olan bir kullanıcı olduğu varsayılıyor.
+
+.Kimlik Doğrulama Yöntemine Sahip API Kullanıcısı
+image::api_consumer_with_api_key.png[Kimlik Doğrulama Yöntemine Sahip API Kullanıcısı]
+
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/rest/gets/v10/first`
+*Değer Kaynağı:* İş Nesnesi Alanı
+*İş Nesnesi Özelliği:* `API Kullanıcı Id`
+*Beklenen Değer:* `451fa26738a04a39b95e79fcaf6c6fa2`(api kullanıcı id)
+*Değer Operatörü:* Eşittir
+*Default Backend:* Hayır
+
+*Backend URL:* `http://localhost:12109/rest/gets/v10/first`
+*Değer Kaynağı:* İş Nesnesi Alanı
+*İş Nesnesi Özelliği:* `API Kullanıcı Id`
+*Beklenen Değer:* `451fa26738a04a39b95e79fcaf6c6fa2`
+*Değer Operatörü:* Eşit değildir
+*Default Backend:* Evet
+====
+
+.Backend URL Ekleme
+image::ab_business_obj_property_backend_url.png[Backend URL Ekleme]
+
+.Yönlendirme
+image::ab_business_obj_property_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *GET* seçilir.
+*Kaydet* butonuna tıklanır.
+
+** Test
+
+Postman veya benzeri bir REST client üzerinden `http://localhost:12102/ab?apiKey=f5a66a64-6e7c-4041-84e7-4d62e96fb7dc` URL'ine istek atılır.
+Atılan isteğin 12107 portlu backend'e gönderildiği görülür.
+*apiKey* parametresinin karşısına farklı bir değer girilir ve istek atılır.
+Atılan isteğin 12109 portlu backend'e gönderildiği görülür.
+--
+
+* Değer kaynağının *İş Nesnesi Özelliği* seçildiği durum:
++
+--
+Sol menüden *Katalog -> Katalog Ayarları* altında bulunan *Özellik Tanımları*'na tıklanır.
+*Özellik Tanımı Oluştur* butonuna tıklanır.
+Aşağıdaki bilgiler doldurulur:
+====
+*Ad:* aggregatorId
+*Nesne Türü:* API Kullanıcısı
+*Veri Giriş Türü:* Tek Satırlı Metin Alanı
+*Veri Tipi:* Metin
+*Varsayılan Değer:* 11
+*Zorunlu Alan mı?:* Hayır
+*Maksimum Uzunluk:* Boş
+*Düzenli İfade:* Boş
+*Görünüm Sırası:* 1
+====
+
+.Özellik Tanımı Oluşturma
+image::attribute_definition_create.png[Özellik Tanımı Oluşturma]
+
+*Kaydet* butonuna tıklanır.
+
+Sol menüden *Katalog* altında bulunan *API Kullanıcıları*'na tıklanır.
+apiKey değeri `f5a66a64-6e7c-4041-84e7-4d62e96fb7dc` olan API Kullanıcısının *güncelle* butonuna tıklanır.
+Özellikler sekmesinde bulunan `aggregatorId` alanına `8` değeri girilir.
+*Güncelle* butonuna tıklanır.
+
+API oluştururken aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/rest/gets/v10/first`
+*Değer Kaynağı:* İş Nesnesi Özelliği
+*Nesne Türü:* `API Kullanıcısı`
+*Özellik:* `aggregatorId`
+*Beklenen Değer:* `8`
+*Değer Operatörü:* Eşittir
+*Default Backend:* Hayır
+
+*Backend URL:* `http://localhost:12109/rest/gets/v10/first`
+*Değer Kaynağı:* İş Nesnesi Özelliği
+*Nesne Türü:* `API Kullanıcısı`
+*Özellik:* `aggregatorId`
+*Beklenen Değer:* `8`
+*Değer Operatörü:* Eşit değildir
+*Default Backend:* Evet
+====
+
+.Backend URL Ekleme
+image::ab_business_obj_attribute_backend_url.png[Backend URL Ekleme]
+
+.Yönlendirme
+image::ab_business_obj_attribute_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *GET* seçilir.
+*Kaydet* butonuna tıklanır.
+
+** Test
+
+Postman veya benzeri bir REST client üzerinden `http://localhost:12102/ab?apiKey=f5a66a64-6e7c-4041-84e7-4d62e96fb7dc` URL'ine istek atılır.
+Atılan isteğin 12107 portlu backend'e gönderildiği görülür.
+*apiKey* parametresinin karşısına farklı bir değer girilir ve istek atılır.
+Atılan isteğin 12109 portlu backend'e gönderildiği görülür.
+--
+
+=== Idempotent Yük Dağıtımı
+
+İsteğin içinden okunabilecek bir değere bağlı olarak, aynı değerdeki isteklerin aynı backend’lere gitmesini sağlar. Bir veya birden fazla Backend URL eklendikten sonra Değer Kaynağı seçimi yapılmalı ve kaynağın ilgili değeri girilmelidir.
+
+==== API Oluşturma ve Test
+
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+*Yeni API Oluştur* butonuna tıklanır.
+*Tanım* sekmesinde aşağıdaki bilgiler doldurulur:
+====
+*Ad:* Idempotent Load Balancing
+*Açıklama:* Idempotent Load Balancing
+*Durum:* Aktif
+*Tip:* REST
+*EndPoint:* `/idempotent`
+*Metot:* GET
+*Asenkron mu?:* Hayır
+====
+
+.API Oluşturma
+image::idempotent_api_create.png[API Oluşturma]
+
+*Yönlendirme* sekmesine tıklanır ve *Yük Dağıtımı ile Yönlendirme* seçilir.
+Yük dağıtım stratejisi olarak *Idempotent* seçilir.
+Backend'de `rest/gets/v10/first` API'si olduğu varsayılır. Aynı backend farklı portlarda (12107, 12109) ya da farklı sunucularda aynı portta birden fazla instance olarak ayağa kaldırılır.
+*Backend URL ekleme* butonuna tıklanır.
+
+.Backend URL Ekleme
+image::idempotent_add_backend_url.png[Backend URL Ekleme]
+
+* Değer kaynağının *İstek Başlığı* seçildiği durum:
++
+--
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/rest/gets/v10/first`
+
+*Backend URL:* `http://localhost:12109/rest/gets/v10/first`
+
+*Değer Kaynağı:* İstek Başlığı
+*İstek Başlığı İsmi:* `X-Forwarded-For`
+====
+
+.Yönlendirme
+image::idempotent_request_header_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *GET* seçilir.
+*Kaydet* butonuna tıklanır.
+
+** Test
+
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+Oluşturulan API'nin *güncelle* butonuna tıklanır.
+*Test* sekmesine tıklanır.
+*İstek -> Başlıklar -> API İsteği Başlıkları* bölümünde *X-Forwarded-For* anahtarının karşısına *88.11.23.35* değeri girilir. Çalıştır'a tıklanır.
+Atılan istek backend'lerden herhangi birine yönlenebilir. *İstek başlığı* değeri değişmediği sürece isteklerin her zaman aynı backend'e yönlendiği görülür.
+--
+
+* Değer kaynağının *Sorgu Dizesi Parametresi* seçildiği durum:
++
+--
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/rest/gets/v10/first`
+
+*Backend URL:* `http://localhost:12109/rest/gets/v10/first`
+
+*Değer Kaynağı:* Sorgu Dizesi Parametresi
+*Sorgu Dizesi Parametre Adı:* `priority`
+====
+
+.Yönlendirme
+image::idempotent_request_query_param_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *GET* seçilir.
+*Kaydet* butonuna tıklanır.
+
+** Test
+
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+Oluşturulan API'nin *güncelle* butonuna tıklanır.
+*Test* sekmesine tıklanır.
+*İstek -> Parametreler -> API Sorgu Parametreleri* bölümünde *priority* anahtarının karşısına *1* değeri girilir. Çalıştır'a tıklanır.
+Atılan istek backend'lerden herhangi birine yönlenebilir. *Sorgu dizesi parametre* değeri değişmediği sürece isteklerin her zaman aynı backend'e yönlendiği görülür.
+--
+
+* Değer kaynağının *İstek Gövdesi JsonPath* seçildiği durum:
++
+--
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/rest/gets/v10/first`
+
+*Backend URL:* `http://localhost:12109/rest/gets/v10/first`
+
+*Değer Kaynağı:* İstek Gövdesi JsonPath
+*JSON Path:* `$.msisdn`
+====
+
+.Yönlendirme
+image::idempotent_json_path_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *GET* seçilir.
+*Kaydet* butonuna tıklanır.
+
+** Test
+
+Postman veya benzeri bir REST client üzerinden aşağıdaki gibi bir istek oluşturulur.
+Gövde kısmına aşağıdaki json değeri girilir ve `http://localhost:12102/idempotent` URL'ine istek atılır.
+[source,json]
+{
+    "offerKey": "OFR1234",
+    "msisdn": "905554443322"
+}
+
+Atılan istek backend'lerden herhangi birine yönlenebilir. *Msisdn* değeri değişmediği sürece isteklerin her zaman aynı backend'e yönlendiği görülür.
+--
+
+* Değer kaynağının *İstek Gövdesi XPath* seçildiği durum:
++
+--
+** API Oluşturma
+
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+*Yeni API Oluştur* butonuna tıklanır.
+*Tanım* sekmesinde aşağıdaki bilgiler doldurulur:
+====
+*Ad:* Idempotent Load Balancing
+*Açıklama:* Idempotent Load Balancing
+*Durum:* Aktif
+*Tip:* SOAP
+*EndPoint:* `/idempotent`
+*Metot:* getGenres
+*Asenkron mu?:* Hayır
+====
+
+.API Oluşturma
+image::idempotent_xpath_api_create.png[API Oluşturma]
+
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/soap/posts/v10/first`
+
+*Backend URL:* `http://localhost:12109/soap/posts/v10/first`
+
+*Değer Kaynağı:* İstek Gövdesi XPath
+*XPath:* `Envelope/Body/getGenres/username[text()]`
+====
+
+.Yönlendirme
+image::idempotent_xpath_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *POST* seçilir.
+*Kaydet* butonuna tıklanır.
+
+** Test
+
+SoapUI veya benzeri bir SOAP Client üzerinden `http://localhost:12102/idempotent` URL'ine aşağıdaki istek atılır:
+[source,xml]
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsdl="http://ttmuzikfuncs.proarge.com/wsdl/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <wsdl:getGenres>
+         <username>ttm_ios</username>
+         <password>l1st4n_7he_mu5ic!</password>
+         <!--Optional:-->
+         <cdata>1</cdata>
+      </wsdl:getGenres>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+Atılan istek backend'lerden herhangi birine yönlenebilir. *username* değeri değişmediği sürece isteklerin her zaman aynı backend'e yönlendiği görülür.
+--
+
+* Değer kaynağının *İş Nesnesi Alanı* seçildiği durum:
++
+--
+*Katalog -> API Kullanıcıları* ekranında tanımlı, `ID` değeri `451fa26738a04a39b95e79fcaf6c6fa2`, `apiKey` değeri `f5a66a64-6e7c-4041-84e7-4d62e96fb7dc` olan bir kullanıcı olduğu varsayılıyor.
+
+.Kimlik Doğrulama Yöntemine Sahip API Kullanıcısı
+image::api_consumer_with_api_key.png[Kimlik Doğrulama Yöntemine Sahip API Kullanıcısı]
+
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/rest/gets/v10/first`
+
+*Backend URL:* `http://localhost:12109/rest/gets/v10/first`
+
+*Değer Kaynağı:* İş Nesnesi Alanı
+*İş Nesnesi Özelliği:* `API Kullanıcı Id`
+====
+
+.Yönlendirme
+image::idempotent_business_obj_property_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *GET* seçilir.
+*Kaydet* butonuna tıklanır.
+
+** Test
+
+Postman veya benzeri bir REST client üzerinden `http://localhost:12102/idempotent?apiKey=f5a66a64-6e7c-4041-84e7-4d62e96fb7dc` URL'ine istek atılır.
+Atılan istek backend'lerden herhangi birine yönlenebilir. *apiKey* değeri değişmediği sürece isteklerin her zaman aynı backend'e yönlendiği görülür.
+--
+
+* Değer kaynağının *İş Nesnesi Özelliği* seçildiği durum:
++
+--
+Sol menüden *Katalog -> Katalog Ayarları* altında bulunan *Özellik Tanımları*'na tıklanır.
+*Özellik Tanımı Oluştur* butonuna tıklanır.
+Aşağıdaki bilgiler doldurulur:
+====
+*Ad:* aggregatorId
+*Nesne Türü:* API Kullanıcısı
+*Veri Giriş Türü:* Tek Satırlı Metin Alanı
+*Veri Tipi:* Metin
+*Varsayılan Değer:* 11
+*Zorunlu Alan mı?:* Hayır
+*Maksimum Uzunluk:* Boş
+*Düzenli İfade:* Boş
+*Görünüm Sırası:* 1
+====
+
+.Özellik Tanımı Oluşturma
+image::attribute_definition_create.png[Özellik Tanımı Oluşturma]
+
+*Kaydet* butonuna tıklanır.
+
+Sol menüden *Katalog* altında bulunan *API Kullanıcıları*'na tıklanır.
+apiKey değeri `f5a66a64-6e7c-4041-84e7-4d62e96fb7dc` olan API Kullanıcısının *güncelle* butonuna tıklanır.
+Özellikler sekmesinde bulunan `aggregatorId` alanına `8` değeri girilir.
+*Güncelle* butonuna tıklanır.
+
+API oluştururken aşağıdaki bilgiler doldurulur:
+====
+*Backend URL:* `http://localhost:12107/rest/gets/v10/first`
+
+*Backend URL:* `http://localhost:12109/rest/gets/v10/first`
+
+*Değer Kaynağı:* İş Nesnesi Özelliği
+*Nesne Türü:* `API Kullanıcısı`
+*Özellik:* `aggregatorId`
+====
+
+.Yönlendirme
+image::idempotent_business_obj_attribute_routing_tab.png[Yönlendirme]
+
+Backend Http Metot *GET* seçilir.
+*Kaydet* butonuna tıklanır.
+
+** Test
+
+Postman veya benzeri bir REST client üzerinden `http://localhost:12102/idempotent?apiKey=f5a66a64-6e7c-4041-84e7-4d62e96fb7dc` URL'ine istek atılır.
+Atılan istek backend'lerden herhangi birine yönlenebilir. *apiKey* değeri değişmediği sürece isteklerin her zaman aynı backend'e yönlendiği görülür.
+--
+
+=== Groovy Kod Routing – External REST API
+
+Aşağıdaki kod ile API üzerinde dinamik olarak yazılan id değeri alınıyor.
+https://jsonplaceholder.typicode.com/posts sitesine get isteği atılıyor.
+Dönen sonuç ve id değeri body üzerine ekleniyor.
+
+[source,groovy]
+----
+package com.mirket.gateway.groovy;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import groovy.json.JsonSlurper
+import org.apache.http.HttpResponse
+import org.apache.http.client.HttpClient
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.HttpClients
+import org.springframework.web.util.UriTemplate
+import java.util.List
+import java.util.Map
+public class GroovyRouteScriptImpl implements GroovyRouteScript {
+private static final Logger LOG = LoggerFactory.getLogger('GroovyLogger')
+
+    public void execute(HttpServletRequest request, RoutingContext context) {
+        int statusCode = 200;
+        context.setStatusCode(statusCode);
+
+        HttpClient httpclient = HttpClients.createDefault() as HttpClient;
+        HttpGet httpget = new HttpGet("https://jsonplaceholder.typicode.com/posts");
+        HttpResponse response = null
+        StringBuilder result = null
+        try {
+            response = httpclient.execute(httpget);
+            InputStream ins = response.getEntity().getContent();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
+            result = new StringBuilder();
+            String line = new String();
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            def id = readPathParameter(request);
+
+            String responseBody = "{\"status\": \"POST_NOT_FOUND\", \"id\": \"" + id + "\"}"
+            JsonSlurper jsonSlurper = new JsonSlurper()
+            List<Map<String, Object>> json = jsonSlurper.parseText(result.toString()) as List<Map<String, Object>>
+            json.forEach(map -> {
+                def idAsString = String.valueOf(map.get("id"));
+                if (idAsString.equals(id)) {
+                    responseBody = "{\"status\": \"OK\", \"id\": \"" + id + "\", \"title\": \"" + map.get("title") + "\"}"
+                }
+            })
+            context.setResponseBody(responseBody);
+        } catch (IOException e) {
+            LOG.error("Hata Oldu");
+        }
+    }
+
+    private String readPathParameter(HttpServletRequest request) {
+        return new UriTemplate("/groovy/posts/{id}/title")
+        .match(request.getRequestURI())
+        .get("id");
+    }
+}
+----
+
+=== Groovy Kod Routing – External SOAP API
+
+Aşağıdaki kod ile API üzerinde dinamik olarak yazılan sayısal değer alınıyor.
+https://www.dataaccess.com/webservicesserver/NumberConversion.wso sitesine soap isteği atılıyor.
+Gelen sayısal değer soap body parametresi olarak kullanılıyor.
+Dönen soap sonucu parse edilip json formatında dönülüyor.
+
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import groovy.xml.XmlSlurper
+import org.apache.http.client.methods.HttpPost
+import org.apache.http.entity.StringEntity
+
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import groovy.json.JsonSlurper
+import org.apache.http.HttpResponse
+import org.apache.http.client.HttpClient
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.HttpClients
+import org.springframework.web.util.UriTemplate
+import java.util.List
+import java.util.Map
+
+class GroovyRouteScriptImpl implements GroovyRouteScript {
+    private static final Logger LOG = LoggerFactory.getLogger('GroovyLogger')
+
+    void execute(HttpServletRequest request, RoutingContext context) {
+        int statusCode = 200;
+        context.setStatusCode(statusCode);
+        def numParam = readPathParameter(request)
+
+        String soapBody = "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                "  <soap:Body>\n" +
+                "    <NumberToDollars xmlns=\"http://www.dataaccess.com/webservicesserver/\">\n" +
+                "      <dNum>${numParam}</dNum>\n" +
+                "    </NumberToDollars>\n" +
+                "  </soap:Body>\n" +
+                "</soap:Envelope>";
+
+
+        HttpClient httpClient = HttpClients.createDefault() as HttpClient;
+        StringEntity stringEntity = new StringEntity(soapBody, "text/xml", "UTF-8")
+        HttpPost httpPost = new HttpPost("https://www.dataaccess.com/webservicesserver/NumberConversion.wso");
+        httpPost.setEntity(stringEntity);
+        HttpResponse response = null
+        StringBuilder result = null
+        try {
+            response = httpClient.execute(httpPost);
+            InputStream ins = response.getEntity().getContent();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
+            result = new StringBuilder();
+            String line = new String();
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            def resultAsString = result.toString();
+            def slurper = new XmlSlurper()
+            def dollarsResult = slurper.parseText(resultAsString).toString();
+
+            String responseBody = "{\"result\": \"${dollarsResult}\"}"
+            context.setResponseBody(responseBody);
+        } catch (IOException e) {
+            LOG.error("Hata Oldu");
+        }
+    }
+
+    private String readPathParameter(HttpServletRequest request) {
+        return new UriTemplate("/dollars/{num}/text")
+                .match(request.getRequestURI())
+                .get("num");
+    }
+}
+----
+
+
+=== Groovy Kod Routing – Database Access - ORACLE
+
+Aşağıdaki kod ile API üzerinde dinamik olarak yazılan id değeri alınıyor.
+Veri kaynaklarında tanımlı <ORACLE-DATASOURCE-ALIAS> takma adına sahip olan veri kaynağındaki CUSTOMERS tablosundan ilgili id değerine sahip olan veriler çekilir.
+Json formatında dönülür.
+
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import jakarta.servlet.http.HttpServletRequest
+import java.util.HashMap
+import com.mirket.datasources.DataSourceFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.RowMapper
+import java.lang.Object
+import java.lang.Override
+import java.sql.ResultSet
+import java.sql.SQLException
+import java.io.Serializable
+import org.json.JSONObject
+import groovy.json.JsonOutput
+
+public class GroovyRouteScriptImpl implements GroovyRouteScript {
+
+    @Autowired
+    private final DataSourceFactory dataSourceFactory;
+
+    public void execute(HttpServletRequest request, RoutingContext context) {
+        Map<String, String> responseHeaders = new HashMap<>()
+        String responseBody = "{\"status\": \"OK\"}"
+        int statusCode = 200
+        context.setStatusCode(statusCode)
+        def msisdn = request.getParameter('msisdn')
+        def customer = this.findByCustomerIdOracle(msisdn)
+        def json = JsonOutput.toJson(customer)
+        context.setResponseBody(json)
+        context.setResponseHeaders(responseHeaders)
+    }
+
+    def findByCustomerIdOracle(id) {
+        def jdbcTemplate = dataSourceFactory.getOrCreateJdbcTemplate('<ORACLE-DATASOURCE-ALIAS>')
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM CUSTOMERS WHERE MSISDN = ?", new CustomerMapper() , id
+                )
+        } catch (e) {
+                println('Hata Oldu: {}' + e)
+                return { id: -1 };
+        }
+    }
+
+    class Customer implements Serializable {
+        Long id;
+        String status;
+        String linetype;
+
+        public Customer(  Long id, String status, String linetype){
+            this.id = id;
+            this.status = status;
+            this.linetype = linetype;
+        }
+    }
+
+    class CustomerMapper implements RowMapper<Customer> {
+        @Override
+        public Customer mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Customer(rs.getLong("MSISDN"), rs.getString("STATUS"), rs.getString("LINETYPE"));
+        }
+    }
+}
+----
+
+
+=== Groovy Kod Routing – Database Access - MYSQL
+
+Aşağıdaki kod ile API üzerinde dinamik olarak yazılan id değeri alınıyor.
+Veri kaynaklarında tanımlı <MYSQL-DATASOURCE-ALIAS> takma adına sahip olan veri kaynağındaki CUSTOMERS tablosundan ilgili id değerine sahip olan veriler çekilir.
+Json formatında dönülür.
+
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import jakarta.servlet.http.HttpServletRequest
+import java.util.HashMap
+import com.mirket.datasources.DataSourceFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.RowMapper
+import java.lang.Object
+import java.lang.Override
+import java.sql.ResultSet
+import java.sql.SQLException
+import java.io.Serializable
+import org.json.JSONObject
+import groovy.json.JsonOutput
+
+public class GroovyRouteScriptImpl implements GroovyRouteScript {
+
+    @Autowired
+    private final DataSourceFactory dataSourceFactory
+
+    public void execute(HttpServletRequest request, RoutingContext context) {
+        Map<String, String> responseHeaders = new HashMap<>()
+        String responseBody = "{\"status\": \"OK\"}"
+        int statusCode = 200
+        context.setStatusCode(statusCode)
+        def msisdn = request.getParameter('msisdn')
+        def customer = this.findByCustomerIdOracle(msisdn)
+        def json = JsonOutput.toJson(customer)
+        context.setResponseBody(json)
+        context.setResponseHeaders(responseHeaders)
+    }
+
+    def findByCustomerIdOracle(id) {
+        def jdbcTemplate = dataSourceFactory.getOrCreateJdbcTemplate('<MYSQL-DATASOURCE-ALIAS>')
+
+        try {
+            return jdbcTemplate.queryForObject('SELECT * FROM CUSTOMERS WHERE MSISDN = ?', new CustomerMapper() , id
+                )
+        } catch (e) {
+            println('Hata Oldu: {}' + e)
+            return { id: -1 };
+        }
+    }
+
+    class Customer implements Serializable {
+        Long id
+        String status
+        String linetype
+
+        public Customer(  Long id, String status, String linetype) {
+            this.id = id
+            this.status = status
+            this.linetype = linetype
+        }
+    }
+
+    class CustomerMapper implements RowMapper<Customer> {
+
+        @Override
+        public Customer mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Customer(rs.getLong('MSISDN'), rs.getString('STATUS'), rs.getString('LINETYPE'))
+        }
+    }
+}
+----
+
+
+=== Groovy Kod Routing – Database Access - MONGO DB
+
+Aşağıdaki kod ile API üzerinde dinamik olarak yazılan id değeri alınıyor.
+Veri kaynaklarında tanımlı <MONGODB-DATASOURCE-ALIAS> takma adına sahip olan veri kaynağındaki CUSTOMERS tablosundan ilgili id değerine sahip olan veriler çekilir.
+Json formatında dönülür.
+
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import jakarta.servlet.http.HttpServletRequest
+import java.util.HashMap
+import com.mirket.datasources.DataSourceFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jdbc.core.RowMapper
+import java.lang.Object
+import java.lang.Override
+import java.sql.ResultSet
+import java.sql.SQLException
+import java.io.Serializable
+import org.json.JSONObject
+import groovy.json.JsonOutput
+import com.mongodb.client.model.Filters
+
+public class GroovyRouteScriptImpl implements GroovyRouteScript {
+
+    @Autowired
+    private final DataSourceFactory dataSourceFactory
+
+    public void execute(HttpServletRequest request, RoutingContext context) {
+        Map<String, String> responseHeaders = new HashMap<>()
+        String responseBody = "{\"status\": \"OK\"}"
+        int statusCode = 200
+        context.setStatusCode(statusCode)
+        def msisdn = request.getParameter('msisdn')
+        def customer = this.findByCustomerIdMongo(msisdn)
+        def json = JsonOutput.toJson(customer)
+        context.setResponseBody(json)
+        context.setResponseHeaders(responseHeaders)
+    }
+
+    def findByCustomerIdMongo(id) {
+        try {
+            def mongoDatabase = dataSourceFactory.getOrCreteMongoDatabase('<MONGODB-DATASOURCE-ALIAS>', 'mirketJanissary')
+            return mongoDatabase.getCollection('customers').find(Filters.eq('_id', id)).first()
+        } catch (e) {
+            println('Hata Oldu: {}' + e)
+            return { id: -1 };
+        }
+    }
+
+    class Customer implements Serializable {
+        Long id
+        String status
+        String linetype
+
+        public Customer(  Long id, String status, String linetype) {
+            this.id = id
+            this.status = status
+            this.linetype = linetype
+        }
+    }
+}
+----
+
+=== Groovy Request Response Dönüşümü - Rest to Soap
+
+Aşağıdaki groovy kodları ile gelen istekteki json body soap xml'e çevrilir.
+Sonuç olarak gelen soap xml ise json'a çevrilir.
+
+
+[source,groovy]
+----
+package com.mirket.gateway.groovy;
+import groovy.json.JsonSlurper
+
+public class GroovyTransformationScriptImpl implements GroovyTransformationScript {
+   public byte[] transform(byte[] json) {
+        def jsonSlurper = new JsonSlurper()
+        def object = jsonSlurper.parseText(new String(json))
+        String username = object.getAt("username")
+        String password = object.getAt("password")
+
+		return ("<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:wsdl=\"http://ttmuzikfuncs.proarge.com/wsdl/\">\n" +
+                "               <soapenv:Header/>\n" +
+                "               <soapenv:Body>\n" +
+                "                  <wsdl:getBannerList>\n" +
+                "                     <username>${username}</username>\n" +
+                "                     <password>${password}</password>\n" +
+                "                  </wsdl:getBannerList>\n" +
+                "               </soapenv:Body>\n" +
+                "            </soapenv:Envelope>").getBytes()
+    }
+}
+----
+
+
+Dönüş tipi olan Banner için bir sınıf tanımlanarak dönülen değerl map edilmiştir.
+
+[source,groovy]
+----
+package com.mirket.gateway.groovy;
+
+import groovy.json.JsonOutput
+import java.util.regex.Pattern
+
+public class GroovyTransformationScriptImpl implements GroovyTransformationScript {
+    public byte[] transform(byte[] input) {
+        def idPattern = Pattern.compile("<id>(.*?)</id>");
+        def contentIdPattern = Pattern.compile("<contentId>(.*?)</contentId>");
+        def contentTypePattern = Pattern.compile("<image>(.*?)</image>");
+        def imagePattern = Pattern.compile("<image>(.*?)</image>");
+        def redirectUrlPattern = Pattern.compile("<redirectURL>(.*?)</redirectURL>");
+        def isFavoritePattern = Pattern.compile("<isFavorite>(.*?)</isFavorite>");
+
+        def inputAsString = new String(input)
+        def ids = getValuesByPattern(inputAsString, idPattern);
+        def contentIds = getValuesByPattern(inputAsString, contentIdPattern);
+        def contentTypes = getValuesByPattern(inputAsString, contentTypePattern);
+        def imagePatterns = getValuesByPattern(inputAsString, imagePattern);
+        def redirectUrls = getValuesByPattern(inputAsString, redirectUrlPattern);
+        def isFavorites = getValuesByPattern(inputAsString, isFavoritePattern);
+
+        def banners = []
+        for (def i = 0; i < ids.size(); i++) {
+            def banner = new Banner(id: ids[i], contentId: contentIds[i], contentType: contentTypes[i], image: imagePatterns[i], redirectURL: redirectUrls[i], isFavorite: isFavorites[i])
+            banners.push(banner)
+        }
+        def output = JsonOutput.toJson(banners:banners)
+        return output.getBytes();
+    }
+
+    public static List<Object> getValuesByPattern(String input, Pattern pattern) {
+        def values = [];
+        def matcher = pattern.matcher(input);
+
+        while (matcher.find()) {
+            def value = matcher.group(1);
+            values.push(value);
+        }
+        return values;
+    }
+}
+
+class Banner {
+    String id
+    String contentId
+    String contentType
+    String image
+    String redirectURL
+    boolean isFavorite;
+}
+----
+
+
+=== Groovy Request Response Dönüşümü - Soap to Rest
+
+Aşağıdaki groovy kodları ile gelen istekteki soap xml body soap json formatına çevrilir.
+Sonuç olarak gelen json body ise soap xml formatına çevrilir.
+
+
+[source,groovy]
+----
+package com.mirket.gateway.groovy;
+import java.nio.charset.StandardCharsets
+import java.util.regex.Pattern
+
+public class GroovyTransformationScriptImpl implements GroovyTransformationScript {
+    public byte[] transform(byte[] input) {
+        def inputString = new String(input, StandardCharsets.UTF_8)
+        def userId = parse("userId", inputString)
+        def id = parse("id", inputString)
+        def title = parse("title", inputString)
+        def body = parse("body", inputString)
+        def json = generateJson(userId, id, title, body)
+        return json.getBytes(StandardCharsets.UTF_8)
+    }
+
+    static String parse(String tagName, String input) {
+        def matcher = Pattern.compile("<$tagName>(.*?)
+        </$tagName>").matcher(input)
+        return matcher.find() ? matcher.group(1) : ""
+    }
+
+    static String generateJson(String userId, String id, String title, String body) {
+        return "{\"userId\": ${userId}, \"id\": ${id}, \"title\":
+        \"${title}\", \"body\": \"${body}\"}"
+    }
+}
+----
+
+
+[source,groovy]
+----
+package com.mirket.gateway.groovy;
+import groovy.json.JsonSlurper
+import java.nio.charset.StandardCharsets
+
+public class GroovyTransformationScriptImpl implements GroovyTransformationScript {
+    public byte[] transform(byte[] input) {
+        def inputString = new String(input, StandardCharsets.UTF_8)
+        def response = parseJson(inputString)
+        return response.getBytes(StandardCharsets.UTF_8)
+    }
+
+    static String parseJson(String input) {
+        JsonSlurper jsonSlurper = new JsonSlurper()
+        Map<String, Object> json = jsonSlurper.parseText(input) as Map<String, Object>
+        return generateSoap(json)
+    }
+
+    static String generateSoap(Map<String, Object> map) {
+        return "<soapenv:Envelope
+                xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"
+                xmlns:wsdl=\"http://jsonplaceholder.com/wsdl/\">\n" +
+                "   <soapenv:Header/>\n" +
+                "   <soapenv:Body>\n" +
+                "   <wsdl:updatePostResponse>\n" +
+                "       <userId>${map.get("userId")}</userId>\n" +
+                "       <id>${map.get("id")}</id>\n" +
+                "       <title>${map.get("title")}</title>\n" +
+                "       <body>${map.get("body")}</body>\n" +
+                "       </wsdl:updatePostResponse>\n" +
+                "    </soapenv:Body>\n" +
+                "</soapenv:Envelope>"
+    }
+}
+----
+
+
+=== Javascript Kod Routing – External REST API
+
+Aşağıdaki kod ile API üzerinde dinamik olarak yazılan id değeri alınıyor.
+https://jsonplaceholder.typicode.com/posts sitesine get isteği atılıyor.
+Dönen sonuç ve id değeri body üzerine ekleniyor.
+
+
+[source,javascript]
+----
+const UriTemplate = Java.type('org.springframework.web.util.UriTemplate');
+const IOUtils = Java.type('org.apache.commons.io.IOUtils');
+const HttpResponse = Java.type('org.apache.http.client.methods.CloseableHttpResponse');
+const HttpGet = Java.type('org.apache.http.client.methods.HttpGet');
+const HttpClients = Java.type('org.apache.http.impl.client.HttpClients');
+
+function execute(request, context) {
+    var httpClient = HttpClients.createDefault();
+    var serviceUrl = "https://jsonplaceholder.typicode.com/posts";
+    var httpGet = new HttpGet(serviceUrl);
+    httpGet.addHeader("Content-Type", "application/json; charset=utf-8");
+
+    var httpResponse = httpClient.execute(httpGet);
+    var entity = httpResponse.getEntity();
+
+    var responseAsString = IOUtils.toString(entity.getContent());
+    const responseAsJson = JSON.parse(responseAsString);
+    const id = readPathVariable(request);
+    const posts = responseAsJson.filter(function (element) {
+        return element.id == id;
+    });
+
+    if (posts.length > 0) {
+        delete posts[0].userId;
+        delete posts[0].body;
+        posts[0].status = 'OK';
+        context.statusCode = 200;
+        context.responseBody = JSON.stringify(posts[0]);
+    } else {
+        context.statusCode = 400;
+        context.responseBody = getErrorResponse('POST_NOT_FOUND', id);
+    }
+    context.responseHeaders = {"content-type": "application/json"};
+}
+
+function readPathVariable(request) {
+    return new UriTemplate("/posts/{id}/title")
+    .match(request.getRequestURI())
+    .get("id");
+}
+
+function getErrorResponse(status, id) {
+    return `{ "status": "${status}", "id": "${id}" }`;
+}
+----
+
+=== Javascript Kod Routing – External SOAP API
+
+Aşağıdaki kod ile API üzerinde dinamik olarak yazılan sayısal değer alınıyor.
+https://www.dataaccess.com/webservicesserver/NumberConversion.wso sitesine soap isteği atılıyor.
+Gelen sayısal değer soap body parametresi olarak kullanılıyor.
+Dönen soap sonucu parse edilip json formatında dönülüyor.
+
+[source,javascript]
+----
+const UriTemplate = Java.type('org.springframework.web.util.UriTemplate');
+const IOUtils = Java.type('org.apache.commons.io.IOUtils');
+const EntityUtils = Java.type('org.apache.http.util.EntityUtils');
+const HttpResponse = Java.type('org.apache.http.client.methods.CloseableHttpResponse');
+const HttpPost = Java.type('org.apache.http.client.methods.HttpPost');
+const HttpClients = Java.type('org.apache.http.impl.client.HttpClients');
+const StringEntity = Java.type('org.apache.http.entity.StringEntity');
+const Pattern =  Java.type('java.util.regex.Pattern');
+const ExceptionUtils = Java.type('org.apache.commons.lang3.exception.ExceptionUtils');
+
+const NumberUtils = {
+    isNumeric: function(str) {
+        if (typeof str != "string") {
+            return false;
+        }
+        return !isNaN(str) && !isNaN(parseFloat(str));
+    }
+}
+
+function execute(request, context) {
+    context.statusCode = 200;
+    context.responseBody = doExecute(request);
+    context.responseHeaders = {"content-type": "application/json"};
+}
+
+function doExecute(request) {
+    const dollarNumber = readDollarNumber(request);
+    validateRequest(dollarNumber);
+
+    const httpClient = HttpClients.createDefault();
+    let httpResponse = null;
+    let entity = null;
+    try {
+        const serviceURL = "https://www.dataaccess.com/webservicesserver/NumberConversion.wso";
+        const httpPost = new HttpPost(serviceURL);
+        httpPost.addHeader("Content-Type", "text/xml; charset=utf-8");
+        const requestBody = `<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <NumberToDollars xmlns="http://www.dataaccess.com/webservicesserver/">
+                  <dNum>${dollarNumber}</dNum>
+                </NumberToDollars>
+              </soap:Body>
+            </soap:Envelope>`;
+
+        httpPost.setEntity(new StringEntity(requestBody, "text/xml", "utf-8"));
+        httpResponse = httpClient.execute(httpPost);
+        entity = httpResponse.getEntity();
+
+        return processResponse(entity);
+    } catch (e) {
+        throw e;
+    } finally {
+        EntityUtils.consumeQuietly(entity);
+        IOUtils.closeQuietly(httpResponse);
+        httpClient.close();
+    }
+}
+
+function readDollarNumber(request) {
+    return new UriTemplate("/dollars/{num}/text")
+    .match(request.getRequestURI())
+    .get("num");
+}
+
+function processResponse(entity) {
+    const responseAsString = IOUtils.toString(entity.getContent());
+    const result = parseNumberToDollarsResult(responseAsString);
+    return `{ "result": "${result}" }`;
+}
+
+function parseNumberToDollarsResult(response) {
+    const matcher = Pattern.compile("<m:NumberToDollarsResult>(.*?)</m:NumberToDollarsResult>")
+    .matcher(response);
+    return matcher.find() ? matcher.group(1) : "";
+}
+
+function validateRequest(dollarNumber) {
+    if (!NumberUtils.isNumeric(dollarNumber)) {
+        throw `num is not number: ${dollarNumber}`;
+    }
+}
+----
+
+=== Javascript Kod Routing – Database Access - ORACLE
+
+Aşağıdaki kod ile API üzerinde dinamik olarak yazılan id değeri alınıyor.
+Veri kaynaklarında tanımlı ORACLEDB_ALIAS takma adına sahip olan veri kaynağındaki CUSTOMERS tablosundan ilgili id değerine sahip olan veriler çekilir.
+Json formatında dönülür.
+
+[source,javascript]
+----
+const IntArray = Java.type("int[]");
+const ObjectArray = Java.type('java.lang.Object[]');
+const ArrayList = Java.type('java.util.ArrayList');
+const HashMap = Java.type('java.util.HashMap');
+const RowMapper = Java.type('org.springframework.jdbc.core.RowMapper');
+const Filters = Java.type('com.mongodb.client.model.Filters');
+const Constants = {
+    MONGODB_ALIAS: 'mymongo',
+    ORACLEDB_ALIAS: 'prodoracledbv1',
+    MYSQLDB_ALIAS: 'mysqltest',
+    CASSANDRADB_ALIAS: 'cassv13',
+    GET_MVNO_BY_ID_SQL: 'db.customers.find({"_id": "?"})'
+};
+
+function findByCustomerIdOracle(id) {
+    const rowMapper = new RowMapper({
+    mapRow: convertToCustomer
+    });
+    const jdbcTemplate = getJdbcTemplate();
+
+    try {
+      return jdbcTemplate.queryForObject(Constants.GET_MVNO_BY_ID_MYSQL, rowMapper, id);
+    } catch(e) {
+      print('Hata Oldu: {}' + e);
+      return {id: -1};
+    }
+}
+
+function getJdbcTemplate() {
+    return dataSourceFactory.getOrCreateJdbcTemplate(Constants.ORACLEDB_ALIAS);
+}
+
+function convertToCustomer(rs, rowNum) {
+    var customer = {};
+    customer.id = rs.getString('id');
+    customer.status = rs.getString('status');
+    customer.lineType = rs.getString('lineType');
+    return customer;
+}
+----
+
+
+=== Javascript Kod Routing – Database Access - MYSQL
+
+Aşağıdaki kod ile API üzerinde dinamik olarak yazılan id değeri alınıyor.
+Veri kaynaklarında tanımlı Constants.MYSQLDB_ALIAS takma adına sahip olan veri kaynağındaki CUSTOMERS tablosundan ilgili id değerine sahip olan veriler çekilir.
+Json formatında dönülür.
+
+[source,javascript]
+----
+const IntArray = Java.type("int[]");
+const ObjectArray = Java.type('java.lang.Object[]');
+const ArrayList = Java.type('java.util.ArrayList');
+const HashMap = Java.type('java.util.HashMap');
+const RowMapper = Java.type('org.springframework.jdbc.core.RowMapper');
+const Filters = Java.type('com.mongodb.client.model.Filters');
+const Constants = {
+    MONGODB_ALIAS: 'mymongo',
+    ORACLEDB_ALIAS: 'prodoracledbv1',
+    MYSQLDB_ALIAS: 'mysqltest',
+    CASSANDRADB_ALIAS: 'cassv13',
+    GET_MVNO_BY_ID_SQL: 'db.customers.find({"_id": "?"})'
+};
+
+function findByCustomerIdMysql(id) {
+    const rowMapper = new RowMapper({
+        mapRow: convertToCustomer
+    });
+    const jdbcTemplate = getJdbcTemplate();
+
+    try {
+      return jdbcTemplate.queryForObject(Constants.GET_MVNO_BY_ID_MYSQL, rowMapper, id);
+    } catch(e) {
+      print('Hata Oldu: {}' + e);
+      return {id: -1};
+    }
+}
+
+function getJdbcTemplate() {
+    return dataSourceFactory.getOrCreateJdbcTemplate(Constants.MYSQLDB_ALIAS);
+}
+
+function convertToCustomer(rs, rowNum) {
+    var customer = {};
+    customer.id = rs.getString('id');
+    customer.status = rs.getString('status');
+    customer.lineType = rs.getString('lineType');
+    return customer;
+}
+----
+
+
+=== Javascript Kod Routing – Database Access - MONGO DB
+
+Aşağıdaki kod ile API üzerinde dinamik olarak yazılan id değeri alınıyor.
+Veri kaynaklarında tanımlı Constants.MONGODB_ALIAS takma adına sahip olan veri kaynağındaki CUSTOMERS tablosundan ilgili id değerine sahip olan veriler çekilir.
+Json formatında dönülür.
+
+[source,javascript]
+----
+const IntArray = Java.type("int[]");
+const ObjectArray = Java.type('java.lang.Object[]');
+const ArrayList = Java.type('java.util.ArrayList');
+const HashMap = Java.type('java.util.HashMap');
+const RowMapper = Java.type('org.springframework.jdbc.core.RowMapper');
+const Filters = Java.type('com.mongodb.client.model.Filters');
+const Constants = {
+    MONGODB_ALIAS: 'mymongo',
+    ORACLEDB_ALIAS: 'prodoracledbv1',
+    MYSQLDB_ALIAS: 'mysqltest',
+    CASSANDRADB_ALIAS: 'cassv13',
+    GET_MVNO_BY_ID_SQL: 'db.customers.find({"_id": "?"})'
+};
+
+function findByCustomerId(id) {
+    const rowMapper = new RowMapper({
+    mapRow: convertToCustomer
+    });
+
+    try {
+       var customerDocument = getCollection().find(Filters.eq("_id", id)).first();
+       return convertToCustomer(customerDocument);
+    } catch(e) {
+      print('Hata Oldu: {}' + e);
+      return {id: -1};
+    }
+}
+
+function getCollection() {
+    const mongoDatabase = dataSourceFactory.getOrCreteMongoDatabase(Constants.MONGODB_ALIAS, "mirketJanissary");
+    return mongoDatabase.getCollection("customers");
+}
+
+function convertToCustomer(customerDocument) {
+    var customer = {};
+    customer.id = customerDocument.get('_id');
+    customer.status = customerDocument.get('status');
+    customer.lineType = customerDocument.get('lineType');
+    return customer;
+}
+----
+
+
+=== Javascript Kod Routing – Database Access - POSTGRES
+
+Aşağıdaki kod ile API üzerinde dinamik olarak yazılan id değeri alınıyor.
+Veri kaynaklarında tanımlı Constants.POSTGRESDB_ALIAS takma adına sahip olan veri kaynağındaki CUSTOMERS tablosundan ilgili id değerine sahip olan veriler çekilir.
+Json formatında dönülür.
+
+[source,javascript]
+----
+const IntArray = Java.type("int[]");
+const ObjectArray = Java.type('java.lang.Object[]');
+const ArrayList = Java.type('java.util.ArrayList');
+const HashMap = Java.type('java.util.HashMap');
+const RowMapper = Java.type('org.springframework.jdbc.core.RowMapper');
+const Filters = Java.type('com.mongodb.client.model.Filters');
+const Constants = {
+    MONGODB_ALIAS: 'mymongo',
+    ORACLEDB_ALIAS: 'prodoracledbv1',
+    MYSQLDB_ALIAS: 'mysqltest',
+    CASSANDRADB_ALIAS: 'cassv13',
+    POSTGRESDB_ALIAS: 'postgresv2',
+    GET_MVNO_BY_ID_SQL: 'db.customers.find({"_id": "?"})'
+};
+
+function findByCustomerIdPostgres(id) {
+    const rowMapper = new RowMapper({
+        mapRow: convertToCustomer
+    });
+    const jdbcTemplate = getJdbcTemplate();
+
+    try {
+      return jdbcTemplate.queryForObject(Constants.GET_MVNO_BY_ID_MYSQL, rowMapper, id);
+    } catch(e) {
+      print('Hata Oldu: {}' + e);
+      return {id: -1};
+    }
+}
+
+function getJdbcTemplate() {
+    return dataSourceFactory.getOrCreateJdbcTemplate(Constants.POSTGRESDB_ALIAS);
+}
+
+function convertToCustomer(rs, rowNum) {
+    var customer = {};
+    customer.id = rs.getString('id');
+    customer.status = rs.getString('status');
+    customer.lineType = rs.getString('lineType');
+    return customer;
+}
+----
+
+
+=== Javascript Request Response Dönüşümü - Rest to Soap
+
+Aşağıdaki javascript kodları ile gelen istekteki json body soap xml'e çevrilir.
+Sonuç olarak gelen soap xml ise json'a çevrilir.
+
+
+Json body üzerinde gelen username ve password soap xml'ine çevrilir.
+[source,javascript]
+----
+function transform(input) {
+    const requestBody = JSON.parse(input);
+    const username = requestBody.username;
+    const password = requestBody.password;
+
+	return `<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsdl="http://ttmuzikfuncs.proarge.com/wsdl/">
+       <soapenv:Header/>
+       <soapenv:Body>
+          <wsdl:getBannerList>
+             <username>${username}</username>
+             <password>${password}</password>
+          </wsdl:getBannerList>
+       </soapenv:Body>
+       </soapenv:Envelope>`;
+
+}
+----
+
+
+Dönüş tipi olan Banner için bir nesne olarak listeye eklenir ve json formatında dönülür.
+[source,javascript]
+----
+function transform(input) {
+    const banners = [];
+
+    const idPattern = Pattern.compile("<id>(.*?)</id>");
+    const contentIdPattern = Pattern.compile("<contentId>(.*?)</contentId>");
+    const contentTypePattern = Pattern.compile("<image>(.*?)</image>");
+    const redirectUrlPattern = Pattern.compile("<redirectURL>(.*?)</redirectURL>");
+    const isFavoritePattern = Pattern.compile("<isFavorite>(.*?)</isFavorite>");
+
+    const ids = getValuesByPattern(input, idPattern);
+    const contentIds = getValuesByPattern(input, contentIdPattern);
+    const contentTypes = getValuesByPattern(input, contentTypePattern);
+    const redirectUrls = getValuesByPattern(input, redirectUrlPattern);
+    const isFavorites = getValuesByPattern(input, isFavoritePattern);
+
+    for (let i = 0; i < ids.length; i++) {
+        banners.push(JSON.stringify({
+            "id": ids[i],
+            "contentId": contentIds[i],
+            "contentType": contentTypes[i],
+            "redirectUrl": redirectUrls[i],
+            "isFavorite": isFavorites[i]
+        }));
+    }
+
+    return `{
+          "banners": [ ${banners} ]
+    }`;
+}
+
+function getValuesByPattern(input, pattern) {
+    const values = [];
+    const matcher = pattern.matcher(input);
+
+    while (matcher.find()) {
+        const value = matcher.group(1);
+        values.push(value);
+    }
+    return values;
+}
+----
+
+
+=== Javascript Request Response Dönüşümü - Soap to Rest
+
+Aşağıdaki javascript kodları ile gelen istekteki soap xml body soap json formatına çevrilir.
+Sonuç olarak gelen json body ise soap xml formatına çevrilir.
+
+
+Pattern ve ExceptionUtils sınıflarını kullanabilmek için aşağdaıki tanımlar ortak kodlar üzerinde yapılmalı.
+[source,javascript]
+----
+const Pattern = Java.type('java.util.regex.Pattern');
+const ExceptionUtils = Java.type('org.apache.commons.lang3.exception.ExceptionUtils');
+----
+
+[source,javascript]
+----
+function transform(input) {
+    var userId = parseUserId(input);
+    var id = parseId(input);
+    var title = parseTitle(input);
+    var body = parseBody(input);
+    return JSON.stringify({userId, id, title, body});
+}
+function parseUserId(r) {
+    const matcher = Pattern.compile("<userId>(.*?)</userId>").matcher(r);
+    return matcher.find() ? matcher.group(1) : "";
+}
+function parseId(r) {
+    const matcher = Pattern.compile("<id>(.*?)</id>").matcher(r);
+    return matcher.find() ? matcher.group(1) : "";
+}
+function parseTitle(r) {
+    const matcher = Pattern.compile("<title>(.*?)</title>").matcher(r);
+    return matcher.find() ? matcher.group(1) : "";
+}
+function parseBody(r) {
+    const matcher = Pattern.compile("<body>(.*?)</body>").matcher(r);
+    return matcher.find() ? matcher.group(1) : "";
+}
+----
+
+
+[source,javascript]
+----
+function transform(input) {
+    print(input)
+    const obj = JSON.parse(input);
+    var userId = obj.userId;
+    var id = obj.id;
+    var title = obj.title;
+    var body = obj.body;
+    return "<soapenv:Envelope
+        xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"
+        xmlns:wsdl=\"http://jsonplaceholder.com/wsdl/\">\n" +
+        "<soapenv:Header/>\n" +
+        "<soapenv:Body>\n" +
+        "<wsdl:updatePostResponse>\n" +
+        "   <userId>" + userId + "</userId>\n" +
+        "   <id>" + id + "</id>\n" +
+        "   <title>" + title + "</title>\n" +
+        "   <body>" + body + "</body>\n" +
+        "   </wsdl:updatePostResponse>\n" +
+        "</soapenv:Body>\n" +
+        "</soapenv:Envelope>"
+}
+----
+
+
+=== Freemarker Request Response Dönüşümü - Rest to Soap
+
+Aşağıdaki dönüşüm kodları ile Rest olarak API'ye gelen istek Soap'a çevrilerek iletilir.
+Gelen Soap sonucu ise Rest formatına çevrilerek dönülür.
+
+
+Gelen istekteki json body üzerinde bulunan username ve password değerleri aşağıdaki kod ile soap xml'i üzerine verilir.
+```
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsdl="http://ttmuzikfuncs.proarge.com/wsdl/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <wsdl:getBannerList>
+         <username>${body.username}</username>
+         <password>${body.password}</password>
+      </wsdl:getBannerList>
+   </soapenv:Body>
+</soapenv:Envelope>
+```
+
+
+Gelen cevaptaki soap xml'i üzerindeki body içindeki getBannerListResponse>bannerList>banner değerlerini json objesi üzerine yerleştirir.
+```
+{
+	"banners" : [
+	  {
+          "id": ${body.Body.getBannerListResponse.bannerList.banner.id},
+          "contentId": ${body.Body.getBannerListResponse.bannerList.banner.contentId},
+          "contentType": ${body.Body.getBannerListResponse.bannerList.banner.contentType},
+          "image": ${body.Body.getBannerListResponse.bannerList.banner.image},
+          "redirectURL": ${body.Body.getBannerListResponse.bannerList.banner.redirectURL},
+          "isFavorite": ${body.Body.getBannerListResponse.bannerList.banner.isFavorite}
+      }
+    ]
+}
+```
+
+
+=== Freemarker Request Response Dönüşümü - Soap to Rest
+
+Aşağıdaki dönüşüm kodları ile Soap olarak API'ye gelen istek Rest formatına çevrilerek iletilir.
+Gelen Rest sonucu ise Soap formatına çevrilerek dönülür.
+
+
+Gelen istekteki Soap xml üzerinde bulunan userId, id, title ve body değerleri aşağıdaki kod ile Rest formatına üzerine verilir.
+```
+{
+    "userId": "${body.Body.updatePostRequest.userId}",
+    "id": "${body.Body.updatePostRequest.id}",
+    "title": "${body.Body.updatePostRequest.title}",
+    "body": "${body.Body.updatePostRequest.body}"
+}
+```
+
+
+Gelen cevaptaki json üzerindeki veriler aşağıdaki kod ile Soap Xml formatına çevrilir.
+```
+<soapenv:Envelope
+xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:wsdl="http://jsonplaceholder.com/wsdl/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <wsdl:updatePostResponse>
+         <userId>${body.userId}</userId>
+         <id>${body.id}</id>
+         <title>${body.title}</title>
+         <body>${body.body}</body>
+      </wsdl:updatePostResponse>
+   </soapenv:Body>
+</soapenv:Envelope>
+```
+
+
+=== Groovy Rooting Senaryosu
+
+Aşağıdaki senaryoda "/products/{productId}/prices" şeklinde tanımlanmış API'ye
+productId değeri girilir ve istek yollanır ve bununla veritabanında product değeri üzerindeki fiyat alınır.
+Aşağıdaki gibi dolar karşılığı sayısal ve yazı olarak dönülür.
+[source,javascript]
+----
+
+{
+  "price": 13.12,
+  "priceText": "thirteen dollars and twelve cents"
+}
+----
+
+
+Burada ortak kod olarak eklenen kodlar rooting üzerinden çağrılır.
+
+
+Ortak kodlara eklenecek veritabanından productId değeri ile fiyat bilgisi dönecek kod.
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import com.mirket.datasources.DataSourceFactory
+import org.springframework.jdbc.core.RowMapper
+
+import java.sql.ResultSet
+import java.sql.SQLException
+
+class ProductPriceService {
+    private static final String ORACLEDB_ALIAS = "prodoracledbv1"
+    private static final String GET_PRODUCT_PRICE_BY_PRODUCT_ID = "SELECT * FROM gulsen.PRODUCT_PRICES pp WHERE pp.PRODUCT_ID = ?"
+
+    private final DataSourceFactory dataSourceFactory
+
+    ProductPriceService(DataSourceFactory dataSourceFactory) {
+        this.dataSourceFactory = dataSourceFactory
+    }
+
+    BigDecimal getProductPriceByProductId(Long productId) {
+        def jdbcTemplate = dataSourceFactory.getOrCreateJdbcTemplate(ORACLEDB_ALIAS)
+        def mapper = new RowMapper<ProductPrice>() {
+            @Override
+            ProductPrice mapRow(ResultSet rs, int rowNum) throws SQLException {
+                ProductPrice productPrice = new ProductPrice()
+                productPrice.id = rs.getLong("ID")
+                productPrice.productId = rs.getLong("PRODUCT_ID")
+                productPrice.priceTL = rs.getBigDecimal("PRICE_TL")
+                return productPrice
+            }
+        }
+
+        def productPrice = jdbcTemplate.queryForObject(GET_PRODUCT_PRICE_BY_PRODUCT_ID, mapper, productId)
+        return productPrice.priceTL
+    }
+
+    private class ProductPrice {
+        private Long id
+        private Long productId
+        private BigDecimal priceTL
+    }
+}
+----
+
+
+Ortak kodlara eklenecek lira değeri dolar değere çevirecek API'ye istek atan ve sonucu dönen kod.
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.mirket.datasources.DataSourceFactory
+import com.fasterxml.jackson.core.type.TypeReference
+
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+
+class ExchangeService {
+    private static final String REST_WS_URL = "http://localhost:12107/rest/v10/tl-to-dollars"
+    private final HttpClient httpClient
+    private final ObjectMapper objectMapper
+
+    ExchangeService(HttpClient httpClient) {
+        this.httpClient = httpClient
+        this.objectMapper = new ObjectMapper()
+    }
+
+    BigDecimal convertTLToDollars(BigDecimal tlAmount) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(REST_WS_URL))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString("{\n" +
+                        "  \"amount\": ${tlAmount}\n" +
+                        "}"))
+                .build()
+
+        def response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+        def responseBody = objectMapper.readValue(response.body(), new TypeReference<Object>() {})
+        return responseBody["result"] as BigDecimal
+    }
+}
+----
+
+
+Ortak kodlara eklenecek numerik olan dolar değerini yazıya çevirecek kod.
+Burada soap tipinde istek atılıyor ve gelen değer soap'tan okunarak dönülüyor.
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import groovy.xml.XmlSlurper
+
+class NumberConversionService {
+    private static final String SOAP_WS_URL = "https://www.dataaccess.com/webservicesserver/numberconversion.wso?op=NumberToDollars"
+    private final HttpClient httpClient
+
+    NumberConversionService(HttpClient httpClient) {
+        this.httpClient = httpClient
+    }
+
+    String convertDollarsToString(BigDecimal amount) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(SOAP_WS_URL))
+                .header("Content-Type", "text/xml")
+                .POST(HttpRequest.BodyPublishers.ofString("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                        "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                        "  <soap:Body>\n" +
+                        "    <NumberToDollars xmlns=\"http://www.dataaccess.com/webservicesserver/\">\n" +
+                        "      <dNum>${amount}</dNum>\n" +
+                        "    </NumberToDollars>\n" +
+                        "  </soap:Body>\n" +
+                        "</soap:Envelope>"))
+                .build()
+
+        def response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+        return new XmlSlurper().parseText(response.body()).toString()
+    }
+}
+----
+
+
+API'deki rooting üzerinde çalıştırılacak kod.
+Buradan ortak kodlarda tanımlanan kodlar çağrılır.
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import com.mirket.datasources.DataSourceFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.util.UriTemplate
+
+import jakarta.servlet.http.HttpServletRequest
+import java.net.http.HttpClient
+import java.util.HashMap
+import java.util.Map
+
+
+class GroovyRouteScriptImpl implements GroovyRouteScript {
+    private final ProductPriceService productPriceService
+    private final ExchangeService exchangeService
+    private final NumberConversionService numberConversionService
+
+    @Autowired
+    GroovyRouteScriptImpl(DataSourceFactory dataSourceFactory) {
+        HttpClient httpClient = HttpClient.newHttpClient()
+
+        this.productPriceService = new ProductPriceService(dataSourceFactory)
+        this.exchangeService = new ExchangeService(httpClient)
+        this.numberConversionService = new NumberConversionService(httpClient)
+    }
+
+    void execute(HttpServletRequest request, RoutingContext context) {
+        def productId = extractProductId(request)
+
+        def productPriceTL = productPriceService.getProductPriceByProductId(productId)
+        def dollars = exchangeService.convertTLToDollars(productPriceTL)
+        def dollarsAsText = numberConversionService.convertDollarsToString(dollars)
+
+        Map<String, String> responseHeaders = new HashMap<>()
+        responseHeaders.put("Content-Type", "application/json")
+        String responseBody = "{\n" +
+                "  \"price\": ${dollars},\n" +
+                "  \"priceText\": \"${dollarsAsText}\"\n" +
+                "}"
+        int statusCode = 200
+        context.setStatusCode(statusCode)
+        context.setResponseBody(responseBody)
+        context.setResponseHeaders(responseHeaders)
+    }
+
+    private Long extractProductId(HttpServletRequest request) {
+        return new UriTemplate("/products/{productId}/prices")
+                .match(request.getRequestURI())
+                .get("productId") as Long
+    }
+}
+----
+
+=== Groovy Transformation Senaryosu
+
+Aşağıdaki senaryoda "/products/{productId}/prices" şeklinde tanımlanmış API'ye
+productId değeri girilir ve istek yollanır ve bununla veritabanında product değeri üzerindeki fiyat alınır.
+Aşağıdaki gibi dolar karşılığı sayısal ve yazı olarak dönülür.
+[source,javascript]
+----
+{
+  "price": 13.12,
+  "priceText": "thirteen dollars and twelve cents"
+}
+----
+
+Akış şu şekilde olacaktır:
+
+Groovy Routing Kodu üzerinden productId pathVariable’dan parse edilerek alınır.
+getProductPriceByProductId metodu çağrılarak ürünün TL fiyatı alınır.
+
+Groovy Response Dönüşüm Kodunda Routing işleminden gelen TL ürün fiyatı alınır.
+convertTLToDollars metodu çağrılarak TL değer $ değere çevirilir.
+convertDollarsToString metodu çağrılarak $ değerin string karşılığı elde edilir.
+
+
+Ortak kodlara eklenecek veritabanından productId değeri ile fiyat bilgisi dönecek kod.
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import com.mirket.datasources.DataSourceFactory
+import org.springframework.jdbc.core.RowMapper
+
+import java.sql.ResultSet
+import java.sql.SQLException
+
+class ProductPriceService {
+    private static final String ORACLEDB_ALIAS = "prodoracledbv1"
+    private static final String GET_PRODUCT_PRICE_BY_PRODUCT_ID = "SELECT * FROM PRODUCT_PRICES pp WHERE pp.PRODUCT_ID = ?"
+
+    private final DataSourceFactory dataSourceFactory
+
+    ProductPriceService(DataSourceFactory dataSourceFactory) {
+        this.dataSourceFactory = dataSourceFactory
+    }
+
+    BigDecimal getProductPriceByProductId(Long productId) {
+        def jdbcTemplate = dataSourceFactory.getOrCreateJdbcTemplate(ORACLEDB_ALIAS)
+        def mapper = new RowMapper<ProductPrice>() {
+            @Override
+            ProductPrice mapRow(ResultSet rs, int rowNum) throws SQLException {
+                ProductPrice productPrice = new ProductPrice()
+                productPrice.id = rs.getLong("ID")
+                productPrice.productId = rs.getLong("PRODUCT_ID")
+                productPrice.priceTL = rs.getBigDecimal("PRICE_TL")
+                return productPrice
+            }
+        }
+
+        def productPrice = jdbcTemplate.queryForObject(GET_PRODUCT_PRICE_BY_PRODUCT_ID, mapper, productId)
+        return productPrice.priceTL
+    }
+
+    private class ProductPrice {
+        private Long id
+        private Long productId
+        private BigDecimal priceTL
+    }
+}
+----
+
+
+Ortak kodlara eklenecek lira değeri dolar değere çevirecek API'ye istek atan ve sonucu dönen kod.
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.mirket.datasources.DataSourceFactory
+import com.fasterxml.jackson.core.type.TypeReference
+
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+
+class ExchangeService {
+    private static final String REST_WS_URL = "http://localhost:12107/rest/v10/tl-to-dollars"
+    private final HttpClient httpClient
+    private final ObjectMapper objectMapper
+
+    ExchangeService(HttpClient httpClient) {
+        this.httpClient = httpClient
+        this.objectMapper = new ObjectMapper()
+    }
+
+    BigDecimal convertTLToDollars(BigDecimal tlAmount) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(REST_WS_URL))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString("{\n" +
+                        "  \"amount\": ${tlAmount}\n" +
+                        "}"))
+                .build()
+
+        def response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+        def responseBody = objectMapper.readValue(response.body(), new TypeReference<Object>() {})
+        return responseBody["result"] as BigDecimal
+    }
+}
+----
+
+
+Ortak kodlara eklenecek numerik olan dolar değerini yazıya çevirecek kod.
+Burada soap tipinde istek atılıyor ve gelen değer soap'tan okunarak dönülüyor.
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+import groovy.xml.XmlSlurper
+
+class NumberConversionService {
+    private static final String SOAP_WS_URL = "https://www.dataaccess.com/webservicesserver/numberconversion.wso?op=NumberToDollars"
+    private final HttpClient httpClient
+
+    NumberConversionService(HttpClient httpClient) {
+        this.httpClient = httpClient
+    }
+
+    String convertDollarsToString(BigDecimal amount) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(SOAP_WS_URL))
+                .header("Content-Type", "text/xml")
+                .POST(HttpRequest.BodyPublishers.ofString("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                        "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
+                        "  <soap:Body>\n" +
+                        "    <NumberToDollars xmlns=\"http://www.dataaccess.com/webservicesserver/\">\n" +
+                        "      <dNum>${amount}</dNum>\n" +
+                        "    </NumberToDollars>\n" +
+                        "  </soap:Body>\n" +
+                        "</soap:Envelope>"))
+                .build()
+
+        def response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString())
+        return new XmlSlurper().parseText(response.body()).toString()
+    }
+}
+----
+
+
+API'deki rooting üzerinde çalıştırılacak kod.
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import com.mirket.datasources.DataSourceFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.util.UriTemplate
+
+import jakarta.servlet.http.HttpServletRequest
+import java.net.http.HttpClient
+import java.util.HashMap
+import java.util.Map
+
+
+class GroovyRouteScriptImpl implements GroovyRouteScript {
+    private final ProductPriceService productPriceService
+    private final ExchangeService exchangeService
+
+    @Autowired
+    GroovyRouteScriptImpl(DataSourceFactory dataSourceFactory) {
+        HttpClient httpClient = HttpClient.newHttpClient()
+
+        this.productPriceService = new ProductPriceService(dataSourceFactory)
+        this.exchangeService = new ExchangeService(httpClient)
+    }
+
+    void execute(HttpServletRequest request, RoutingContext context) {
+        def productId = extractProductId(request)
+
+        def productPriceTL = productPriceService.getProductPriceByProductId(productId)
+        def dollars = exchangeService.convertTLToDollars(productPriceTL)
+
+        Map<String, String> responseHeaders = new HashMap<>()
+        responseHeaders.put("Content-Type", "application/json")
+        String responseBody = "{\n" +
+                "  \"price\": ${dollars}\n" +
+                "}"
+        int statusCode = 200
+        context.setStatusCode(statusCode)
+        context.setResponseBody(responseBody)
+        context.setResponseHeaders(responseHeaders)
+    }
+
+    private Long extractProductId(HttpServletRequest request) {
+        return new UriTemplate("/products/{productId}/prices")
+                .match(request.getRequestURI())
+                .get("productId") as Long
+    }
+}
+----
+
+
+API'deki cevap veri dönüşümü üzerinde çalıştırılacak kod.
+[source,groovy]
+----
+package com.mirket.gateway.groovy
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import org.springframework.beans.factory.annotation.Autowired
+import com.fasterxml.jackson.core.type.TypeReference
+import java.net.http.HttpClient
+
+public class GroovyTransformationScriptImpl implements GroovyTransformationScript {
+    private final NumberConversionService numberConversionService;
+    private final ObjectMapper objectMapper;
+
+    @Autowired
+    GroovyTransformationScriptImpl() {
+        HttpClient httpClient = HttpClient.newHttpClient()
+        this.objectMapper = new ObjectMapper();
+        this.numberConversionService = new NumberConversionService(httpClient)
+    }
+
+    public byte[] transform(byte[] input) {
+        def inputAsString = new String(input);
+        def responseBody = objectMapper.readValue(inputAsString, new TypeReference<Object>() {})
+        def price = responseBody["price"] as BigDecimal;
+        def priceAsText = numberConversionService.convertDollarsToString(price);
+        def transformedResponse = "{\n" +
+                "  \"price\": ${price},\n" +
+                "  \"priceText\": \"${priceAsText}\"\n" +
+                "}"
+
+        return transformedResponse.getBytes("UTF-8");
+    }
+}
+----
+
+=== Javascript Rooting Senaryosu
+
+Aşağıdaki senaryoda "/products/{productId}/prices" şeklinde tanımlanmış API'ye
+productId değeri girilir ve istek yollanır ve bununla veritabanında product değeri üzerindeki fiyat alınır.
+Aşağıdaki gibi dolar karşılığı sayısal ve yazı olarak dönülür.
+[source,javascript]
+----
+{
+  "price": 13.12,
+  "priceText": "thirteen dollars and twelve cents"
+}
+----
+
+Burada ortak kod olarak eklenen kodlar rooting üzerinden çağrılır.
+
+
+Ortak kodlara eklenecek veritabanından productId değeri ile fiyat bilgisi dönecek kod.
+[source,javascript]
+----
+const Constants = {
+    ORACLEDB_ALIAS: 'prodoracledbv1',
+    MONGODB_ALIAS: 'mymongo',
+    MYSQLDB_ALIAS: 'mysqltest',
+    CASSANDRADB_ALIAS: 'cassv13',
+    GET_MVNO_BY_ID_SQL: 'db.customers.find({"_id": "?"})'
+};
+
+function getProductPriceByProductId(productId) {
+     const rowMapper = new RowMapper({
+        mapRow: convertToProductPrice
+    });
+    const jdbcTemplate = getJdbcTemplate();
+
+    try {
+        const product = jdbcTemplate.queryForObject("select * from PRODUCT_PRICES where product_id = ? and rownum <= 1", rowMapper, productId);
+        return product.priceTl
+    } catch(e) {
+      print('Hata Oldu: {}' + e);
+      return 0;
+    }
+}
+
+function getJdbcTemplate() {
+    return dataSourceFactory.getOrCreateJdbcTemplate(Constants.ORACLEDB_ALIAS);
+}
+
+function convertToProductPrice(rs, rowNum) {
+    var productPrice = {};
+    productPrice.id = rs.getString('id');
+    productPrice.productId = rs.getString('product_id');
+    productPrice.priceTl = rs.getString('price_tl');
+    return productPrice;
+}
+----
+
+
+Ortak kodlara eklenecek lira değeri dolar değere çevirecek API'ye istek atan ve sonucu dönen kod.
+[source,javascript]
+----
+function convertTLToDollars(tlAmount) {
+    const httpClient = HttpClients.createDefault();
+    let httpResponse = null;
+    let entity = null;
+    try {
+        const serviceURL = "http://localhost:12107/rest/v10/tl-to-dollars";
+        const httpPost = new HttpPost(serviceURL);
+        httpPost.addHeader("Content-Type", "application/json; charset=utf-8");
+        const requestBody = `{"amount":` +tlAmount+`}`;
+
+        httpPost.setEntity(new StringEntity(requestBody, "application/json", "utf-8"));
+        httpResponse = httpClient.execute(httpPost);
+        entity = httpResponse.getEntity();
+
+        return processResponse(entity);
+    } catch (e) {
+        throw e;
+    } finally {
+        EntityUtils.consumeQuietly(entity);
+        IOUtils.closeQuietly(httpResponse);
+        httpClient.close();
+    }
+}
+function processResponse(entity) {
+    const responseAsString = IOUtils.toString(entity.getContent());
+    return JSON.parse(responseAsString).result;
+}
+----
+
+
+Ortak kodlara eklenecek numerik olan dolar değerini yazıya çevirecek kod.
+Burada soap tipinde istek atılıyor ve gelen değer soap'tan okunarak dönülüyor.
+[source,javascript]
+----
+function convertDollarsToString(dollarAmount) {
+    const httpClient = HttpClients.createDefault();
+    let httpResponse = null;
+    let entity = null;
+    try {
+        const serviceURL = "https://www.dataaccess.com/webservicesserver/numberconversion.wso?op=NumberToDollars";
+        const httpPost = new HttpPost(serviceURL);
+        httpPost.addHeader("Content-Type", "text/xml; charset=utf-8");
+        const requestBody = `<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <NumberToDollars xmlns="http://www.dataaccess.com/webservicesserver/">
+                  <dNum>`+dollarAmount+`</dNum>
+                </NumberToDollars>
+              </soap:Body>
+            </soap:Envelope>`;
+
+        httpPost.setEntity(new StringEntity(requestBody, "text/xml", "utf-8"));
+        httpResponse = httpClient.execute(httpPost);
+        entity = httpResponse.getEntity();
+
+        return processResponseXml(entity);
+    } catch (e) {
+        throw e;
+    } finally {
+        EntityUtils.consumeQuietly(entity);
+        IOUtils.closeQuietly(httpResponse);
+        httpClient.close();
+    }
+}
+function processResponseXml(entity) {
+    const responseAsString = IOUtils.toString(entity.getContent());
+    const matcher = Pattern.compile("<m:NumberToDollarsResult>(.*?)</m:NumberToDollarsResult>").matcher(responseAsString);
+    return matcher.find() ? matcher.group(1) : "";
+}
+----
+
+
+Ortak kodlara yukarıdaki kodlarda kullanılacak olan veri tipleri eklenir
+[source,javascript]
+----
+const IntArray = Java.type("int[]");
+const ObjectArray = Java.type('java.lang.Object[]');
+const ArrayList = Java.type('java.util.ArrayList');
+const HashMap = Java.type('java.util.HashMap');
+const RowMapper = Java.type('org.springframework.jdbc.core.RowMapper');
+const Pattern = Java.type('java.util.regex.Pattern');
+const Filters = Java.type('com.mongodb.client.model.Filters');
+
+const UriTemplate = Java.type('org.springframework.web.util.UriTemplate');
+const IOUtils = Java.type('org.apache.commons.io.IOUtils');
+const EntityUtils = Java.type('org.apache.http.util.EntityUtils');
+const HttpResponse = Java.type('org.apache.http.client.methods.CloseableHttpResponse');
+const HttpPost = Java.type('org.apache.http.client.methods.HttpPost');
+const HttpClients = Java.type('org.apache.http.impl.client.HttpClients');
+const StringEntity = Java.type('org.apache.http.entity.StringEntity');
+const ExceptionUtils = Java.type('org.apache.commons.lang3.exception.ExceptionUtils');
+----
+
+
+API'deki rooting üzerinde çalıştırılacak kod.
+Buradan ortak kodlarda tanımlanan kodlar çağrılır.
+[source,javascript]
+----
+function execute(request, context) {
+    let responseHeaders = new Map();
+    let statusCode = 200;
+    let url_path = request.getServletPath().toString();
+    const matcher = Pattern.compile("/products/(.*?)/prices").matcher(url_path);
+    const product_id = matcher.find() ? matcher.group(1) : "";
+
+    const productPriceTl = getProductPriceByProductId(product_id);
+
+    const productPriceDollar = convertTLToDollars(productPriceTl);
+
+    const dollarAsString = convertDollarsToString(productPriceDollar);
+
+    let responseBody = JSON.stringify({"status": "OK", "priceTl": productPriceTl, "priceDollar": productPriceDollar, "priceDollarString": dollarAsString, "usdTry": 24, });
+    context.statusCode = statusCode;
+    context.responseBody = responseBody;
+    context.responseHeaders = responseHeaders;
+}
+----
+
+=== Javascript Transformation Senaryosu
+
+Aşağıdaki senaryoda "/products/{productId}/prices" şeklinde tanımlanmış API'ye
+productId değeri girilir ve istek yollanır ve bununla veritabanında product değeri üzerindeki fiyat alınır.
+Aşağıdaki gibi dolar karşılığı sayısal ve yazı olarak dönülür.
+[source,javascript]
+----
+{
+  "price": 13.12,
+  "priceText": "thirteen dollars and twelve cents"
+}
+----
+
+Akış şu şekilde olacaktır:
+
+Javascript Routing Kodu üzerinden productId pathVariable’dan parse edilerek alınır.
+getProductPriceByProductId metodu çağrılarak ürünün TL fiyatı alınır.
+
+Javascript Response Dönüşüm Kodunda Routing işleminden gelen TL ürün fiyatı alınır.
+convertTLToDollars metodu çağrılarak TL değer $ değere çevirilir.
+convertDollarsToString metodu çağrılarak $ değerin string karşılığı elde edilir.
+
+
+Ortak kodlara eklenecek veritabanından productId değeri ile fiyat bilgisi dönecek kod.
+[source,javascript]
+----
+const Constants = {
+    ORACLEDB_ALIAS: 'prodoracledbv1',
+    MONGODB_ALIAS: 'mymongo',
+    MYSQLDB_ALIAS: 'mysqltest',
+    CASSANDRADB_ALIAS: 'cassv13',
+    GET_MVNO_BY_ID_SQL: 'db.customers.find({"_id": "?"})'
+};
+
+function getProductPriceByProductId(productId) {
+     const rowMapper = new RowMapper({
+        mapRow: convertToProductPrice
+    });
+    const jdbcTemplate = getJdbcTemplate();
+
+    try {
+        const product = jdbcTemplate.queryForObject("select * from PRODUCT_PRICES where product_id = ? and rownum <= 1", rowMapper, productId);
+        return product.priceTl
+    } catch(e) {
+      print('Hata Oldu: {}' + e);
+      return 0;
+    }
+}
+
+function getJdbcTemplate() {
+    return dataSourceFactory.getOrCreateJdbcTemplate(Constants.ORACLEDB_ALIAS);
+}
+
+function convertToProductPrice(rs, rowNum) {
+    var productPrice = {};
+    productPrice.id = rs.getString('id');
+    productPrice.productId = rs.getString('product_id');
+    productPrice.priceTl = rs.getString('price_tl');
+    return productPrice;
+}
+----
+
+
+Ortak kodlara eklenecek lira değeri dolar değere çevirecek API'ye istek atan ve sonucu dönen kod.
+[source,javascript]
+----
+function convertTLToDollars(tlAmount) {
+    const httpClient = HttpClients.createDefault();
+    let httpResponse = null;
+    let entity = null;
+    try {
+        const serviceURL = "http://localhost:12107/rest/v10/tl-to-dollars";
+        const httpPost = new HttpPost(serviceURL);
+        httpPost.addHeader("Content-Type", "application/json; charset=utf-8");
+        const requestBody = `{"amount":` +tlAmount+`}`;
+
+        httpPost.setEntity(new StringEntity(requestBody, "application/json", "utf-8"));
+        httpResponse = httpClient.execute(httpPost);
+        entity = httpResponse.getEntity();
+
+        return processResponse(entity);
+    } catch (e) {
+        throw e;
+    } finally {
+        EntityUtils.consumeQuietly(entity);
+        IOUtils.closeQuietly(httpResponse);
+        httpClient.close();
+    }
+}
+function processResponse(entity) {
+    const responseAsString = IOUtils.toString(entity.getContent());
+    return JSON.parse(responseAsString).result;
+}
+----
+
+
+Ortak kodlara eklenecek numerik olan dolar değerini yazıya çevirecek kod.
+Burada soap tipinde istek atılıyor ve gelen değer soap'tan okunarak dönülüyor.
+[source,javascript]
+----
+function convertDollarsToString(dollarAmount) {
+    const httpClient = HttpClients.createDefault();
+    let httpResponse = null;
+    let entity = null;
+    try {
+        const serviceURL = "https://www.dataaccess.com/webservicesserver/numberconversion.wso?op=NumberToDollars";
+        const httpPost = new HttpPost(serviceURL);
+        httpPost.addHeader("Content-Type", "text/xml; charset=utf-8");
+        const requestBody = `<?xml version="1.0" encoding="utf-8"?>
+            <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+              <soap:Body>
+                <NumberToDollars xmlns="http://www.dataaccess.com/webservicesserver/">
+                  <dNum>`+dollarAmount+`</dNum>
+                </NumberToDollars>
+              </soap:Body>
+            </soap:Envelope>`;
+
+        httpPost.setEntity(new StringEntity(requestBody, "text/xml", "utf-8"));
+        httpResponse = httpClient.execute(httpPost);
+        entity = httpResponse.getEntity();
+
+        return processResponseXml(entity);
+    } catch (e) {
+        throw e;
+    } finally {
+        EntityUtils.consumeQuietly(entity);
+        IOUtils.closeQuietly(httpResponse);
+        httpClient.close();
+    }
+}
+function processResponseXml(entity) {
+    const responseAsString = IOUtils.toString(entity.getContent());
+    const matcher = Pattern.compile("<m:NumberToDollarsResult>(.*?)</m:NumberToDollarsResult>").matcher(responseAsString);
+    return matcher.find() ? matcher.group(1) : "";
+}
+----
+
+
+Ortak kodlara yukarıdaki kodlarda kullanılacak olan veri tipleri eklenir
+[source,javascript]
+----
+const IntArray = Java.type("int[]");
+const ObjectArray = Java.type('java.lang.Object[]');
+const ArrayList = Java.type('java.util.ArrayList');
+const HashMap = Java.type('java.util.HashMap');
+const RowMapper = Java.type('org.springframework.jdbc.core.RowMapper');
+const Pattern = Java.type('java.util.regex.Pattern');
+const Filters = Java.type('com.mongodb.client.model.Filters');
+
+const UriTemplate = Java.type('org.springframework.web.util.UriTemplate');
+const IOUtils = Java.type('org.apache.commons.io.IOUtils');
+const EntityUtils = Java.type('org.apache.http.util.EntityUtils');
+const HttpResponse = Java.type('org.apache.http.client.methods.CloseableHttpResponse');
+const HttpPost = Java.type('org.apache.http.client.methods.HttpPost');
+const HttpClients = Java.type('org.apache.http.impl.client.HttpClients');
+const StringEntity = Java.type('org.apache.http.entity.StringEntity');
+const ExceptionUtils = Java.type('org.apache.commons.lang3.exception.ExceptionUtils');
+----
+
+
+API'deki rooting üzerinde çalıştırılacak kod.
+[source,javascript]
+----
+function execute(request, context) {
+    let responseHeaders = new Map();
+    let statusCode = 200;
+    let url_path = request.getServletPath().toString();
+    const matcher = Pattern.compile("rest/gets/v10/products/(.*?)/prices").matcher(url_path);
+    const product_id = matcher.find() ? matcher.group(1) : "";
+
+    const productPriceTl = getProductPriceByProductId(product_id);
+
+    let responseBody = JSON.stringify({"status": "OK", "price": productPriceTl, "usdTry": 24});
+    context.statusCode = statusCode;
+    context.responseBody = responseBody;
+    context.responseHeaders = responseHeaders;
+}
+----
+
+
+API'deki cevap veri dönüşümü üzerinde çalıştırılacak kod.
+[source,javascript]
+----
+function transform(input) {
+    const json = JSON.parse(input);
+    json.priceTl = json.price;
+    json.price = convertTLToDollars(json.price);
+    json.priceText = convertDollarsToString(json.price)
+    return JSON.stringify(json);
+}
+----
+
+=== Asenkron API Bildirimleri
+
+==== API Oluşturma
+
+Uygulamaya giriş yapılır.
+Sol menüden *Katalog* altında bulunan *API*'ye tıklanır.
+*Yeni API Oluştur* butonuna tıklanır.
+*Tanım* sekmesinde aşağıdaki bilgiler doldurulur:
+====
+*Ad:* Asenkron API Notification
+*Açıklama:* Asenkron API Notification
+*Durum:* Aktif
+*Tip:* REST
+*EndPoint:* `/posts/{id}`
+*Metot:* GET
+*Asenkron mu?:* Evet
+*Cevap Gövdesi:*
+[source,json]
+----
+{
+  "status": "OK"
+}
+----
+====
+
+.API Oluşturma
+image::async_api_create.png[API Oluşturma]
+
+*Yönlendirme* sekmesine tıklanır ve *Basit Yönlendirme* seçilir.
+Aşağıdaki bilgiler doldurulur:
+====
+*Backend Http Metot:* GET
+*BackendUri:* `https://jsonplaceholder.typicode.com/posts/{id}`
+====
+
+.Yönlendirme
+image::simple_routing_api_create_routing_tab.png[Yönlendirme]
+
+Sol menüden *Katalog* altında bulunan *API Kullanıcılar*'ına tıklanır.
+*API Kullanıcısı Oluştur* butonuna tıklanır.
+Aşağıdaki bilgiler doldurulur:
+====
+*Ad:* Test User
+*Durum:* Aktif
+*Organizasyon:* Inomera
+*Kimlik Doğrulama Yöntemi:* Anonim
+====
+
+.API Kullanıcısı Oluşturma
+image::api_consumer_create.png[API Kullanıcısı Oluşturma]
+
+==== Asenkron API Bildirim Yeniden Denemesi
+
+Sol menüden *Katalog* altında bulunan *Planlar*'a tıklanır.
+*Plan Oluştur* butonuna tıklanır.
+
+`http://localhost:12107/rest/posts/v10/notif/receive`: Backend'de POST isteğini karşılayan Controller’a ait URL olduğu varsayılır.
+Aşağıdaki bilgiler doldurulur:
+====
+*Ad:* Client Plan
+*API Kullanıcısı:* Test User
+*Durum:* Aktif
+*Açıklama:* Client Plan
+
+*API ekle:*
+*API:* Asenkron API Notification
+*Bildirim Url'i:* `http://localhost:12107/rest/posts/v10/notif/receive`
+*Bağlantı Zaman aşımı (milisaniye):* 1000
+*Okuma Zaman Aşımı (milisaniye):* 1000
+*Maksimum Deneme Sayısı:* `3`
+*Proxy Sunucusu:* Proxy Sunucu Kullanılmasın
+*Zaman Aralığı:* `1 dakika`
+====
+
+.Plan Oluşturma
+image::plan_create.png[Plan Oluşturma]
+
+.Plana API Ekleme
+image::notif_retry_plan_api_create.png[Plana API Ekleme]
+
+*Kaydet* butonuna tıklanır.
+
+* Test
++
+--
+Backend ayakta değilken istek atılır.
+Status alanında *TO_BE_RETRIED* yazdığı görülür.
+Sistem tarafından 1 dakika aralıklarla 3 kere istek atılır.
+Backend cevap vermez ise status alanı *FAILED* olarak güncellenir.
+Eğer 3 denemeden herhangi birinde backend cevap verir ise status alanı *SUCCESSFUL* olarak güncellenir.
+--
+
+==== Asenkron API Bildirim Proxy
+
+Bir adet proxy sunucu kurulur. (Lokalde apache veya bir docker container ile yapılabilir)
+Bu proxy sunucunun bilgileri *Ayarlar → Proxy Sunucular* sayfasından sisteme eklenir.
+
+.Proxy Sunucu Bilgileri
+image::proxy_server.png[Proxy Sunucu Bilgileri]
+
+Sol menüden *Katalog* altında bulunan *Planlar*'a tıklanır.
+*Plan Oluştur* butonuna tıklanır.
+
+`http://localhost:12107/rest/posts/v10/notif/receive`: Backend'de POST isteğini karşılayan Controller’a ait URL olduğu varsayılır.
+Aşağıdaki bilgiler doldurulur:
+====
+*Ad:* Client Plan
+*API Kullanıcısı:* Test User
+*Durum:* Aktif
+*Açıklama:* Client Plan
+
+*API ekle:*
+*API:* Asenkron API Notification
+*Bildirim Url'i:* `http://localhost:12107/rest/posts/v10/notif/receive`
+*Bağlantı Zaman aşımı (milisaniye):* 1000
+*Okuma Zaman Aşımı (milisaniye):* 1000
+*Maksimum Deneme Sayısı:* `3`
+*Proxy Sunucusu:* Apache Local (Proxy sunucunun adı)
+*Zaman Aralığı:* `1 dakika`
+====
+
+.Plan Oluşturma
+image::plan_create.png[Plan Oluşturma]
+
+.Plana API Ekleme
+image::notif_proxy_plan_api_create.png[Plana API Ekleme]
+
+*Kaydet* butonuna tıklanır.
+
+* Test
++
+--
+API’ye backend ayaktayken bir istek gönderilir. JSONPlaceholder çıktısının notifikasyon olarak proxy sunucu üzerinden backend'e gönderildiği gözlemlenir.
+--
