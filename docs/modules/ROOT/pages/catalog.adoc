@@ -29,7 +29,7 @@ image::organization_sync_feature.png[Organizasyon Senkronizasyon]
 
 === API Listeleme Ekranı
 
-Menüden appileri görüntülemek için ”API” alanına tıklayarak ula̧şılabilir.
+Menüden API'leri görüntülemek için "API" alanına tıklayarak ulaşılabilir.
 Arama kriterlerine göre istenilen değer girildiğinde aşağıdaki api'ler listelenir.
 Kullanıcı ”Temizle” butonuna tıklayarak arama kriterlerini temizleyebilir.
 “Kapat” butonuna tıklayarak kullanıcı Ana Menüye dönüş yapabilir.
