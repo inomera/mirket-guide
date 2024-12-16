@@ -1,0 +1,507 @@
+== Katalog -> Organizasyonlar
+
+=== Organizasyon Listeleme Ekranı
+
+API kullanıcılarını gruplandırmak için kullanılan organizasyonların listelendiği ekrana menüden ”Organizasyonlar” kısmından ulaşılabilir.
+Arama kriterlerine göre istenilen değer girildiğinde aşağıdaki organizasyon listesi listelenir.
+Kullanıcı, ”Temizle” butonuna tıklayarak arama kriterlerini temizleyebilir.
+“Kapat” butonuna tıklayarak kullanıcı Ana Menüye dönüş yapabilir.
+Her organizasyonun solunda bulunan "Güncelle" butonuna tıklayarak da mevcut organizasyon üzerinde değişiklikler yapılabilir.
+
+image::organization_list.png[Organizasyon Listeleme Ekranı]
+
+=== Organizasyon Oluşturma Ekranı
+
+Kullanıcı, Organizasyon Listeleme ekranında yer alan “Organizasyon Oluştur” butonuna tıklayarak aşağıdaki ekran alıntısında görüldüğü gibi yeni organizasyon oluşturabilir.
+“İptal” butonuna tıklayarak kullanıcı Organizasyon Listeleme ekranına dönüş yapabilir.
+
+.Organizasyon Oluşturma Ekranı
+image::organization_create.png[Organizasyon Oluşturma Ekranı]
+
+=== Organizasyon Senkronizasyonuyla Tek Noktadan Yönetim
+Yeni bir Organizasyon oluşturulduğunda veya var olan bir Organizasyon güncellendiğinde, uygulama birden fazla siteda çalışıyorsa, açılan popup içinde her site için ayrı bir buton ile senkronizasyon işlemi yapılabilir.
+Burada kullanıcı Organizasyon senkronize etmek zorunda değildir. Kapat tuşuna basarak diğer site(larda) manuel oluşturmayı tercih edebilir.
+
+.Organizasyon Senkronizasyon
+image::organization_sync_feature.png[Organizasyon Senkronizasyon]
+
+== Katalog -> API
+
+=== API Listeleme Ekranı
+
+Menüden API'leri görüntülemek için "API" alanına tıklayarak ulaşılabilir.
+Arama kriterlerine göre istenilen değer girildiğinde aşağıdaki api'ler listelenir.
+Kullanıcı ”Temizle” butonuna tıklayarak arama kriterlerini temizleyebilir.
+“Kapat” butonuna tıklayarak kullanıcı Ana Menüye dönüş yapabilir.
+Her apinin solunda bulunan "Güncelle" butonuna tıklayarak mevcut API üzerinde değişiklikler yapılabilir.
+Her apinin solunda bulunan "Görüntüle" butonuna tıklayarak da mevcut API 'nin değerleri görülebilir.
+Ayrıca yine her apinin solunda bulunan "Kopyala" butonuna tıklayarak da mevcut API 'nin değerleri kopyalanarak yeniden bir API oluşturulabilir.
+
+.API Listeleme Ekranı
+image::api_list.png[API Listeleme Ekranı]
+
+=== API Oluşturma Ekranı
+
+Kullanıcı API Listeleme ekranında yer alan “Yeni API Oluştur” butonuna tıklayarak aşağıda görünen "Tanım" sekmesi ile ekran üzerinden yeni api oluşturabilir.
+
+=== Tanım
+
+* *Ad:*  API’nin adı girilir.
+* *Açıklama:*  API ilgili bir açıklama girilir.
+* *Durum:* API’nin durum bilgisi girilir.
+* *Tip:* API’nin tipi seçilir.
+REST veya SOAP seçeneklerinden birisi seçilir.
+* *Endpoint:* Gateway modülünde bu API için açılacak olan URL yazılır.
+Örneğin: "/ws/rest/v10/subscription/list" Gateway modülünde buraya girilen URL üzerinden gelen istekleri bu API ile ilişkilendirir.
+Bu bilgiler API endpointlerine bakılarak girilmelidir.
+* *Metod:*   API nin çağrılma metodu girilir.
+GET, POST, DELETE, PUT, PATCH gibi seçenekler bulunur.
+* *Asenkron mu?:*  API nin asenkron çalışması istenildiğinde bu checkbox işaretlenir. Ardından açılan Cevap Gövdesi bölümüne JSON veya XML olarak dönüş değeri girilir. Eğer checkbox işaretlenmezse API senkron olarak çalışacaktır.
+
+.API Oluşturma Ekranı
+image::api_create.png[API Oluşturma Ekranı]
+
+=== API Senkronizasyonuyla Tek Noktadan Yönetim
+Yeni bir API oluşturulduğunda veya var olan bir API güncellendiğinde, uygulama birden fazla siteda çalışıyorsa, açılan popup içinde her site için ayrı bir buton ile senkronizasyon işlemi yapılabilir.
+Burada kullanıcı API senkronize etmek zorunda değildir. Kapat tuşuna basarak diğer site(larda) manuel oluşturmayı tercih edebilir.
+
+.API Senkronizasyon
+image::api_sync_feature.png[API Senkronizasyon]
+
+=== Yönlendirme
+
+API 'nin ilgili backend'e nasıl, hangi strateji ile yönlendirileceği bu sekme üzerinden belirlenir.
+Basit Yönlendirme, Yük Dağıtımı ile Yönlendirme, Groovy Kodu çalıştırması ve JavaScript Kodu Çalıştırması gibi seçenekler bulunur.
+
+.Yönlendirme
+image::routing.png[Yönlendirme]
+
+==== Basit Yönlendirme
+
+* *Backend Http Metod Alanı:* Backend Http metodu seçilir.
+GET, POST, DELETE, PUT, PATCH gibi seçenekler bulunur.
+* *BackendUri Alanı:* İsteğinin gideceği backend sistemin URL’i bu alana girilir.
+
+==== Yük Dağıtımı ile Yönlendirme
+
+Bu sekmeye geçildiğinde API üzerinde yük dağıtım stratejisi seçilebilir hale gelecektir.
+Yük Dağıtım Stratejisi için Round Robin, Weighted, A/B Test ve Idempotent yöntemlerinden birisi seçilerek ilgili değerler girilebilir.
+Her strateji için bir adet Backend Url Ekleme butonu bulunur. Bu buton ile URL eklenebilir.
+Bu sekmede ayrıca yük dağıtım yöntemi farketmeksizin backend Http metodu seçilmelidir.
+
+* *Round Robin:* Eklenen birden fazla BackendURL'e istekleri sırayla dağıtır.
+* *Weighted:* BackendURL eklemek için butona tıklandığında her bir url için ayrıca ağırlık değeri girilmesi gerekir.
+Girilen bu ağırlık değerlerine göre istekler ilgili backendlere random dağıtılır.
+* *A/B Test:* Bazı serverların istek üzerinde çalıştırılacak idempotent bir fonksiyona göre sadece belirli istekleri alması sağlanır.
+Bu yapıda BackendUrl'lerin (ya da ribbon dilinde Server) her biri veya birkaçı için idempotent fonksiyonlar tanımlanır.
+Server seçim sırasında önce fonksiyona sahip serverlar üzerinde bu fonksiyonlar çalıştırılır ve ilk uyan server dönülür.
+Eğer uyan server yoksa ve fonksiyonu olmayan serverlar varsa, bu serverlar arasında RoundRobin yapılır.
+Eğer tüm serverlarda idempotent fonksiyon varsa ve hiçbirisi uymuyorsa, Default Backend checkbox'ı seçili olan server dönülecektir.
+* *Idempotent:* İsteğin içinden okunabilecek bir değere bağlı olarak, aynı değerdeki isteklerin aynı backend'lere gitmesini sağlar.
+Bir veya birden fazla Backend URL eklendikten sonra Değer Kaynağı seçimi yapılmalı ve kaynağın ilgili değeri girilmelidir.
+
+** *Değer Kaynağı:*
+*** *Sabit Değer:* Sabit Değer seçtikten sonra aşağıda açılacak olan input'a sabit bir değer girişi yapılır.
+Her API isteğinde aynı değer girilir.
+Örneğin inomera, create-subscription apisini çağırırken X-API-NAME headerına "CreateSub" yazılmasını istediyse bunu sabit değer yoluyla girişi yapılabilir.
+*** *İstek Başlığı:* İş ortaklarının gönderdiği istekte gelen bir header'ı seçerek onun arka tarafa bizim istediğimiz isimle gitmesini sağlayabilir.
+Örneğin müşterinin yolladığı X-ABC header'ını inomera'ya X-DEF headerında göndermek istenirse bu kullanılır.
+*** *İstek Çerezi:* API isteğinde Cookie (Çerez) olarak gelen bir değeri arkadaki sisteme (Inomera)'ya header olarak aktarmak istediğinde kullanırsın.
+Örneğin kullanıcının JSESSIONID cookie'sini Inomera'ya X-J-SESS-ID diye header yapıp yollayabilir.
+*** *Sorgu Dizesi Parametresi:* İstek URL'inde soru işaretinden sonra yazılan bir parametreyi okuyup header'a set etmek istenirse kullanılır.
+API kullanıcısının http://ip:port/gateway/api-url?page=1&max=2&name=inomera yazdığı durumda "name" parametresini alıp bir header'a koyularak arkadaki sisteme header'da inomera değeri gönderilir.
+*** *İstek Gövdesi JsonPath:* Eğer client'dan gelen istek JSON ise ve içerisinden bir parametrenin okunması isteniyorsa "JsonPath" tanımlama dili kullanarak hangi parametreyi alacağımızı belirtebiliriz.
+Örnek json path tanımı : $.phoneNumbers[:1].type
+*** *İstek Gövdesi XPath:* Eğer client'dan gelen istek XML ise ve içerisinden bir parametreyi okumak istiyorsak "XPath" denilen dili kullanarak hangi parametreyi alacağımızı belirtebiliriz.
+Bu çok bilinen bir dil.
+Bu şekilde bir yazımı bulunuyor ve elindeki xml'e göre değişiyor. /bookstore/book/price[text()]
+*** *İş Nesnesi Alanı:* API isteğindeki context içerisindeki nesnelerden birisinin belirli alanlarını arka tarafa header olarak gönderilmek için kullanılır.
+Örneğin bir API isteği yapıldığında gateway o istekle ilgili şu iş nesnelerinin hangileri olduğunu biliyor: Organizasyon, API Kullanıcısı, Plan, API.
+İstenildiğinde örneğin organizasyonun ismi backend'e header olarak gönderilebilir.
+*** *İş Nesnesi Özelliği:* API, API Kullanıcısı, Plan veya Organizasyon'daki özelliklerden birisini Header olarak göndermek için kullanılır.
+
+.Yük Dağıtımı ile Yönlendirme
+image::api_load_distribution.png[Yük Dağıtımı ile Yönlendirme]
+
+==== Groovy Kodu Çalıştırılması
+
+Yönlendirme sekmesinde seçildiği zaman Groovy kodu yazılabilmesi için bir text editör açılır.
+Bu editör üzerinden Groovy kodu yazılarak yönlendirme işlemi yapılabilir.
+
+==== JavaScript Kodu Çalıştırılması
+
+Yönlendirme sekmesinde seçildiği zaman JavaScript kodu yazılabilmesi için bir text editör açılır.
+Bu editör üzerinden JavaScript kodu yazılarak yönlendirme işlemi yapılabilir.
+
+=== Dönüşüm
+
+.Dönüşüm
+image::transformation.png[Dönüşüm]
+
+İsteğin, cevabın veya varsa hatanın veri dönüşümü bu sekme üzerinden yapılır.
+
+==== İstek Veri Dönüşümü
+
+Backend'e gidecek olan isteğin verisi üzerinde istenildiği taktirde dönüşüm yapılabilir veya isteğe başlık eklenebilir.
+İstek veri dönüşümü Freemarker, Groovy veya JavaScript yazarak yapılabilmektedir.
+
+===== Freemarker
+
+İstek veri dönüşümü Freemarker kodu ile yapılır.
+
+===== Groovy
+
+İstek veri dönüşümü Groovy kodu ile yapılır.
+
+===== JavaScript
+
+İstek veri dönüşümü JavaScript kodu ile yapılır.
+
+==== Cevap Veri Dönüşümü
+
+Backend'in döndüğü cevabın verisi üzerinde istenildiği taktirde dönüşüm yapılabilir.
+Cevap veri dönüşümü Freemarker, Groovy veya JavaScript yazarak yapılabilmektedir.
+
+===== Freemarker
+
+Cevap veri dönüşümü Freemarker kodu ile yapılır.
+
+===== Groovy
+
+Cevap veri dönüşümü Groovy kodu ile yapılır.
+
+===== JavaScript
+
+Cevap veri dönüşümü JavaScript kodu ile yapılır.
+
+==== Hata Veri Dönüşümü
+
+İstek sırasında dönülen hata üzerinde istenildiği taktirde dönüşüm yapılabilir.
+Hata veri dönüşümü Freemarker, Groovy veya JavaScript yazarak yapılabilmektedir.
+
+===== Freemarker
+
+Hata veri dönüşümü Freemarker kodu ile yapılır.
+
+===== Groovy
+
+Hata veri dönüşümü Groovy kodu ile yapılır.
+
+===== JavaScript
+
+Hata veri dönüşümü JavaScript kodu ile yapılır.
+
+==== API İsteği Başlıkları
+
+.API İsteği Başlıkları Oluşturma Ekranı
+image::api_request_header.png[API İsteği Başlıkları Oluşturma Ekranı]
+
+* *API İsteği Başlıkları:* API isteğinin gönderileceği backend sistem request header'a bir parametre eklemesini istiyorsa api isteği başlıkları kısmı kullanılır.
+
+** *Değer Kaynağı:*
+*** *Sabit Değer:* Sabit Değer seçtikten sonra aşağıda açılacak olan input'a sabit bir değer girişi yapılır.
+Her API isteğinde aynı değer girilir.
+Örneğin inomera, create-subscription apisini çağırırken X-API-NAME headerına "CreateSub" yazılmasını istediyse bunu sabit değer yoluyla girişi yapılabilir.
+*** *İstek Başlığı:* İş ortaklarının gönderdiği istekte gelen bir header'ı seçerek onun arka tarafa bizim istediğimiz isimle gitmesini sağlayabilir.
+Örneğin müşterinin yolladığı X-ABC header'ını inomera'ya X-DEF headerında göndermek istenirse bu kullanılır.
+*** *İstek Çerezi:* API isteğinde Cookie (Çerez) olarak gelen bir değeri arkadaki sisteme (Inomera)'ya header olarak aktarmak istediğinde kullanırsın.
+Örneğin kullanıcının JSESSIONID cookie'sini Inomera'ya X-J-SESS-ID diye header yapıp yollayabilir.
+*** *Sorgu Dizesi Parametresi:* İstek URL'inde soru işaretinden sonra yazılan bir parametreyi okuyup header'a set etmek istenirse kullanılır.
+API kullanıcısının http://ip:port/gateway/api-url?page=1&max=2&name=inomera yazdığı durumda "name" parametresini alıp bir header'a koyularak arkadaki sisteme header'da inomera değeri gönderilir.
+*** *İstek Gövdesi JsonPath:* Eğer client'dan gelen istek JSON ise ve içerisinden bir parametrenin okunması isteniyorsa "JsonPath" tanımlama dili kullanarak hangi parametreyi alacağımızı belirtebiliriz.
+Örnek json path tanımı : $.phoneNumbers[:1].type
+*** *İstek Gövdesi XPath:* Eğer client'dan gelen istek XML ise ve içerisinden bir parametreyi okumak istiyorsak "XPath" denilen dili kullanarak hangi parametreyi alacağımızı belirtebiliriz.
+Bu çok bilinen bir dil.
+Bu şekilde bir yazımı bulunuyor ve elindeki xml'e göre değişiyor. /bookstore/book/price[text()]
+*** *İş Nesnesi Alanı:* API isteğindeki context içerisindeki nesnelerden birisinin belirli alanlarını arka tarafa header olarak gönderilmek için kullanılır.
+Örneğin bir API isteği yapıldığında gateway o istekle ilgili şu iş nesnelerinin hangileri olduğunu biliyor: Organizasyon, API Kullanıcısı, Plan, API.
+İstenildiğinde örneğin organizasyonun ismi backend'e header olarak gönderilebilir.
+*** *İş Nesnesi Özelliği:* API, API Kullanıcısı, Plan veya Organizasyon'daki özelliklerden birisini Header olarak göndermek için kullanılır.
+İş Nesnesi Özelliği "Özellik Tanımları" kısmında daha detaylı belirtilecek.
+
+=== Önbellek
+
+Önbelleği aktifleştir checkbox'ı işaretlendiğinde önbellek aktif hale gelir ve kullanıcıdan önbelleğin zaman aşımı değerini saniye cinsinden girilmesi beklenir.
+
+=== Test
+
+API 'nin tüm değerleri doldurulup API oluşturduktan sonra API, "Test" sekmesi üzerinden ilgili değerler girildikten sonra tetiklenebilir.
+
+==== İstek
+
+API'ye yapılacak istek için gereken değerler bu alandan girilir. Alanın en üstünde isteğin yapılacağı URL'in girileceği bir alan ve method tipi vardır.
+API tanımında seçilen method tipi ve endpoind değeri bu alanda bulunan method ve URL alanını otomatik olarak doldurur.
+
+===== Parametreler
+
+İstek ile birlikte gönderilecek parametre değerlerinin ismi ve değerleri burada girilir.
+
+===== Başlıklar
+
+İstek ile birlikte gönderilecek başlık değerlerinin anahtar ve değerleri burada girilir.
+
+===== Gövde
+
+İsteğin gövdesi burada eklenir.
+
+==== Cevap
+
+Çalıştır butonuna tıklandıktan sonra dönen cevap burada gösterilir.
+
+==== Örnek Kod
+
+Seçilen şablona göre API'nin bilgileri işlenir ve şablonun örnek kodu oluşturulup gösterilir.
+
+== Katalog -> API Kullanıcıları
+
+=== API Kullanıcıları Listeleme Ekranı
+
+Kullanıcı, API Kullanıcıları listeleme ekranına menüden “API Kullanıcıları” na tıklayarak ulaşabilir.
+Arama Kriterlerine istenilen değer girildikten sonra “Ara” butonuna bastığında aşağıdaki API Kullanıcıları listesi güncellenir.
+Kullanıcı “Temizle” butonuna tıklayarak arama kriterlerini temizleyebilir.
+“Kapat” butonuna tıklayarak kullanıcı Ana Menüye dönüş yapabilir.
+
+Her api kullanıcısının solunda bulunan "Güncelle" butonuna tıklayarak da mevcut api kullanıcıları üzerinde değişiklikler yapılabilir.
+
+.API Kullanıcıları Listeleme Ekranı
+image::api_users_list.png[API Kullanıcıları Listeleme Ekranı]
+
+=== API Kullanıcısı Oluşturma Ekranı
+
+Kullanıcı, API Kullanıcısı Listeleme ekranında yer alan “API Kullanıcısı Oluştur” butonuna tıklayarak aşağıdaki ekran alıntısında görüldüğü gibi yeni api oluşturabilir.
+Form alanları aşağıdaki kurallara göre doldurulur ve Kaydet butonuna basılarak API Kullanıcısı oluşturulur.
+İptal butonuna basıldığında, API Kullanıcıları Listeleme ekranına dönüş yapılır.
+
+.API Kullanıcısı Oluşturma Ekranı
+image::api_user_create.png[API Kullanıcısı Oluşturma Ekranı]
+
+* *Ad:*  API Kullanıcısının ismi girilir.
+* *Durum:* API Kullanıcısının durum bilgisi girilir.
+* *Organizasyon:* API Kullanıcısının bağlı olacağı Organizasyon bilgisi seçilir.
+* *IP Kısıtlamaları:* Mirket'e gelen istekleri IP bazlı kısıtlamak isteniyorsa bu kısım kullanılır.
+İş ortağının gelmesi beklenen IP bilgileri bu kısma girilir.
+
+.API Kullanıcısı Kimlik Doğrulama Yöntemleri
+image::api_consumers_authentication_strategy.png[Kimlik Doğrulama Yöntemleri]
+
+* *Kimlik Doğrulama yöntemleri:*
+
+** *Temel Kimlik Doğrulama:* Temel kimlik doğrulama seçildiğinde gelen username ve password'ün base64 hash'inin alınıp authorization headerına koyulmasıdır.
+DeFacto bir yöntemdir.
+Örnek olarak bir username ve password hashlendikten sonra şu şekilde hash ile header gönderilir.
+Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l
+** *İstek Başlığında API Key:* İstek Başlığında API Key seçilip ileri butonuna tıklanır.
+İstek başlığında gönderilecek apiKey değeri ve header adı girilerek kimlik doğrulama yöntemi belirlenir.
+** *İstek Başlığında Kullanıcı Adı & Şifre:* İstek Başlığında Kullanıcı Adı & Şifre seçilip ileri butonuna tıklanır.
+İstek başlığında gönderilecek Kullanıcı Adı & Şifre değeri ve Kullanıcı Adı & Şifre header adı girilerek kimlik doğrulama yöntemi belirlenir.
+** *Parametrede API Key:* Parametrede API Key seçilip ileri butonuna tıklanır.
+Apikey, Apikey Parametre adı bilgileri girilerek kimlik doğrulama yöntemi belirlenir.
+Bu bilgiler örnekte gösterildiği gibi girilerek istek gönderilebilir. ör: http://example.inomera.com/ws/rest/v10/subscription/list?apikey=123456642232
+** *Parametrede Kullanıcı Adı & Şifre:* Parametrede Kullanıcı Adı & Şifre seçilip ileri butonuna tıklanır.
+Kullanıcı Adı & Şifre ve Kullanıcı Adı & Şifre parametre adı bilgileri girilerek kimlik doğrulama yöntemi belirlenir.
+Parametreye bu bilgiler örnekte gösterildiği gibi girilerek istek gönderilebilir. ör: http://example.inomera.com/ws/rest/v10/subscription/list?username=asdf&password=qwerrrrt
+** *İstek Gövdesinde Temel Kimlik Doğrulama:* Öncelikle tercih edilen sorgu dilini (Json Path veya XPath) seçin ve ilerleme butonuna basın. Ardından sistemin kimlik doğrulamasını yapabilmesi için Apikey değerini ve bu değerin konumunu (Apikey Path) sisteme tanımlayın.
+** *İstek Gövdesinde Kullanıcı Adı & Şifre:* İlk adımda Json Path veya XPath sorgu dillerinden birini seçerek ilerleyin. Sonrasında kimlik doğrulama için gerekli olan kullanıcı bilgilerini (kullanıcı adı ve şifre) ve bu bilgilerin istek gövdesindeki konumlarını belirtin.
+** *İstek Gövdesinde API Key:* Sistem, istek gövdesinde bulunan Basic Auth dizesini belirlenen XPATH veya JSONPATH üzerinden tespit eder. Bulunan dize çözümlenerek (decode edilerek) içerisindeki kullanıcı adı ve şifre bilgileri elde edilir.
+
+=== API Kullanıcısı Senkronizasyonuyla Tek Noktadan Yönetim
+Yeni bir API Kullanıcısı oluşturulduğunda veya var olan bir API Kullanıcısı güncellendiğinde, uygulama birden fazla siteda çalışıyorsa, açılan popup içinde her site için ayrı bir buton ile senkronizasyon işlemi yapılabilir.
+
+.API Kullanıcısı Senkronizasyon
+image::api_consumer_sync_feature.png[API Kullanıcısı Senkronizasyon]
+
+=== API Kullanıcısı Detay Ekranı
+
+API Kullanıcısı detay ekranı aşağıdaki iki ana bölümden oluşmaktadır:
+
+==== Genel Bilgiler
+
+Bu bölümde API kullanıcısına ait temel bilgiler yer alır:
+
+.API Kullanıcısı Detay Ekranı
+image::api_consumer_detail.png[API Kullanıcısı Detay Ekranı]
+
+- **Ad:** API kullanıcısının sistem adı (Örn: ChargingContentUsageConsumer)
+- **Durum:** Kullanıcının aktiflik durumu (Aktif/Pasif)
+- **Organizasyon:** Bağlı olduğu organizasyon bilgisi (Örn: ChargingContentUsageOrg)
+- **Beyaz Liste:** İzin verilen IP adresleri listesi
+- **Kara Liste:** Engellenen IP adresleri listesi
+
+==== Kimlik Doğrulama Yöntemleri
+
+API kullanıcısına tanımlanmış kimlik doğrulama yöntemleri aşağıdaki şekildedir:
+
+**İstek Başlığında (Header) Kimlik Doğrulama**
+
+* İstek Başlığında API Key
+* İstek Başlığında Kullanıcı Adı & Şifre
+
+**Parametrede Kimlik Doğrulama**
+
+* Parametrede API Key
+* Parametrede Kullanıcı Adı & Şifre
+
+**İstek Gövdesinde (Body) Kimlik Doğrulama**
+
+* İstek Gövdesinde API Key
+* İstek Gövdesinde Kullanıcı Adı & Şifre
+* İstek Gövdesinde Temel Kimlik Doğrulama
+
+Bu ekran üzerinden API kullanıcısının tüm kimlik bilgileri ve erişim ayarları görüntülenebilir.
+
+== Katalog -> Planlar
+
+=== Planlar Listeleme Ekranı
+
+Kullanıcılar, planları listeleme ekranına menüden “Planlar” a tıklayarak ulaşabilir.
+Arama Kriterlerine göre “Ara” butonuna tıklandığında aşağıdaki Planlar listesi görüntülenir.
+Kullanıcı “Temizle” butonuna tıklayarak arama kriterlerini temizleyebilir.
+“Kapat” butonuna tıklayarak kullanıcı Ana Menüye dönüş yapabilir.
+
+Her planın solunda bulunan "Güncelle" butonuna tıklayarak da mevcut planlar üzerinde değişiklikler yapılabilir.
+
+.Planlar Listeleme Ekranı
+image::api_plans_list.png[Planlar Listeleme Ekranı]
+
+=== Plan Oluşturma Ekranı
+
+Kullanıcı, Planlar Listeleme ekranında yer alan “Plan Oluştur” butonuna tıklayarak aşağıdaki ekran görüntüsünde görüldüğü gibi yeni plan oluşturabilir.
+Form alanları aşağıdaki kurallara göre doldurulur ve Kaydet butonuna basılarak plan oluşturulur.
+İptal butonuna basarak plan listeleme ekranına dönüş yapılır.
+
+.Plan Oluşturma Ekranı
+image::api_plan_create.png[Plan Oluşturma Ekranı]
+
+* *Ad:*  API Kullanıcısının ismi girilir.
+* *API Kullanıcısı:* Plan yaratılacak API Kullanıcısı bilgisi seçilir.
+* *Durum:* Planın durum bilgisi girilir.
+* *Kullanımı Kısıtlı mı?:* Planın tamamına bir kullanım kısıtı girilmek istenirse bu kısım kullanılır.
+** *İstek Sayısı:* Belli bir zaman aralığında atılacak toplam istek sayısı.
+** *Zaman Aralığı:* Kısıtlamada bulunacak zaman aralığı bilgisi.
+** *Algoritma:* Intervally seçilirse kullanım kısıtlama periyodu tamamlandıktan sonra yeni kullanım haklarının tamamı aktif hale getirilir. Örneğin kullanıcıya saniyede 10 kullanım hakkı verildiğinde her saniyenin sonunda kullanıcıya 10 kullanım hakkı verilir.
+Greedy seçilirse kullanım hakkı olabilecek en kısa süre içerisinde arttırılmaya çalışılır. Örneğin saniyede 10 kullanım verildiği durumda kullanıcıya her 100 milisaniyede bir yeni kullanım hakkı verilecektir.
+* *Bu Plandaki API'ler* Planın yetkisi olduğu tüm API'ler burada bulunur
+
+API eklemek için "+API" kısmına tıklanır.
+
+.Plana API Ekleme Ekranı
+image::api_plans_restrictions.png[Plana API Ekleme Ekranı]
+
+* *API:*  API bilgisi seçilir.
+* *Kullanımı Kısıtlı mı?:* API'ye bir kullanım kısıtı getirilmek istenirse bu kısım kullanılır.
+** *İstek Sayısı:* Belli bir zaman aralığında atılacak toplam istek sayısı.
+** *Zaman Aralığı:* Kısıtlamada bulunacak zaman aralığı bilgisi.
+** *Algoritma:* Intervally seçilirse kullanım kısıtlama periyodu tamamlandıktan sonra yeni kullanım haklarının tamamı aktif hale getirilir. Örneğin kullanıcıya saniyede 10 kullanım hakkı verildiğinde her saniyenin sonunda kullanıcıya 10 kullanım hakkı verilir.
+Greedy seçilirse kullanım hakkı olabilecek en kısa süre içerisinde arttırılmaya çalışılır. Örneğin saniyede 10 kullanım verildiği durumda kullanıcıya her 100 milisaniyede bir yeni kullanım hakkı verilecektir.
+
+=== Plan Senkronizasyonuyla Tek Noktadan Yönetim
+Yeni bir Plan oluşturulduğunda veya var olan bir Plan güncellendiğinde, uygulama birden fazla siteda çalışıyorsa, açılan popup içinde her site için ayrı bir buton ile senkronizasyon işlemi yapılabilir.
+Burada kullanıcı Plan tanımını Senkronize etmek zorunda değildir. Kapat tuşuna basarak diğer site(larda) manuel oluşturmayı tercih edebilir.
+
+.Plan Senkronizasyon
+image::plan_sync_feature.png[Plan Senkronizasyon]
+
+=== Katalog -> Katalog Ayarları -> Veri Kaynakları
+
+Uygulamada kullanılacak veri kaynakları (veritabanı bağlantıları) ayarları burada yapılır.
+Bu veritabanlarına daha sonra js ve groovy kodları kullanılarak erişilir.
+
+.Veri Kaynakları Listeleme
+image::datasource_definitions_01.jpeg[Veri Kaynakları Listeleme]
+
+.Veri Kaynakları Görüntüleme
+image::datasource_definitions_02.jpeg[Veri Kaynakları Görüntüleme]
+
+.Veri Kaynakları Düzenleme
+image::datasource_definitions_03.jpeg[Veri Kaynakları Düzenleme]
+
+=== Katalog -> Katalog Ayarları -> Ortak Kodlar
+
+Api üzerinde yönlendirme ve dönüşüm için kod yazarken ortak kullanılacak kodlar burada tanımlanır.
+Böylece aynı kodların birden fazla yerde tekrarlanması önlenir.
+
+Ad, bean ismi, tip ve durum verileri ile filtrelenerek arama yapılabilir.
+
+Düzenleme ve oluşturma ekranında seçilen kod tipine göre (javascript veya groovy) aşağıda çıkan editördeki format ve
+yazı görünümü değişmektedir.
+
+.Ortak Kodlar Listeleme
+image::shared_codes_01.jpeg[Ortak Kodlar Listeleme]
+
+
+==== Groovy Ortak Kod
+
+.Ortak Kodlar Groovy Görüntüleme
+image::shared_codes_04.jpeg[Ortak Kodlar Groovy Görüntüleme]
+
+
+.Ortak Kodlar Groovy Düzenleme
+image::shared_codes_05.jpeg[Ortak Kodlar Groovy Düzenleme]
+
+
+==== JavaScript Ortak Kod
+
+
+.Ortak Kodlar Javascript Görüntüleme
+image::shared_codes_02.jpeg[Ortak Kodlar Javascript Görüntüleme]
+
+
+.Ortak Kodlar Javascript Düzenleme
+image::shared_codes_03.jpeg[Ortak Kodlar Javascript Düzenleme]
+
+
+==== Groovy Header Rule Script Ortak Kod
+
+.Ortak Kodlar Header Rule Script Groovy Görüntüleme
+image::shared_codes_10.jpeg[Ortak Kodlar Header Rule Script Groovy Görüntüleme]
+
+
+.Ortak Kodlar Header Rule Script Groovy Düzenleme
+image::shared_codes_07.jpeg[Ortak Kodlar Header Rule Script Groovy Düzenleme]
+
+Groovy Remote Adres set eden script örneği;
+
+```java
+
+package com.mirket.gateway.groovy;
+
+import com.netflix.zuul.context.RequestContext;
+import jakarta.servlet.http.HttpServletRequest;
+
+public class HeaderRule implements GroovyHeaderRuleScript {
+
+    public Object execute(RequestContext requestContext, String headerName) {
+        HttpServletRequest request = requestContext.getRequest();
+        String ipAddress = request.getRemoteAddr();
+        requestContext.addZuulRequestHeader(headerName, ipAddress);
+        return null;
+    }
+}
+```
+
+
+==== JavaScript Header Rule Script Ortak Kod
+
+.Ortak Kodlar Header Rule Script JavaScript Görüntüleme
+image::shared_codes_08.jpeg[Ortak Kodlar Header Rule Script JavaScript Görüntüleme]
+
+
+.Ortak Kodlar Header Rule Script JavaScript Düzenleme
+image::shared_codes_09.jpeg[Ortak Kodlar Header Rule Script JavaScript Düzenleme]
+
+
+=== Katalog -> Katalog Ayarları -> Özellik Tanımları
+
+Kullanıcılar, Bir özellik tanımı yapılarak API'de, Api Kullanıcılarında, Organizasyonda ve Plan'da gösterebilirler.
+Aşağıdaki ekrandan yeni bir özellik tanımlarken hangi entity için olduğunu seçilmektedir.
+Örneğin API Kullanıcısının üzerine ilgili partnerin telefon numarasını email adresini vs custom özellik olarak eklenebilir.
+Bu ekrandan eklediğiniz tanımlar ilgili entityleri düzenlerken sayfada input olarak görülür.
+
+Bu kısım raporlama amaçlı belirli alanları tutmak için de kullanılabilir.
+
+
+.Özellik Tanımları Listeleme
+image::attribute_definitions_01.jpeg[Özellik Tanımları Listeleme]
+
+.Özellik Tanımları Düzenleme
+image::attribute_definitions_02.jpeg[Özellik Tanımları Düzenleme]

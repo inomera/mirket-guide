@@ -1,0 +1,20 @@
+:encoding: utf-8
+:lang: en
+:author: Inomera Research
+:doctitle: Mirket Kılavuzu
+:doctype: book
+
+:toc: left
+:toc-title: İçindekiler
+:toclevels: 5
+:sectnums:
+
+:chapter-label:
+:figure-caption: Figure
+:example-caption: Example
+:table-caption: Table
+:appendix-caption: Appendix
+:listing-caption: Code
+:last-update-label!:
+
+:title-logo-image: image::mirket-logo.png[align=center, pdfwidth=3in]

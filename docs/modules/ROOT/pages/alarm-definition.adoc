@@ -1,0 +1,205 @@
+== Alarm Tanımları
+
+Alarm tanımları ekranında Arama Kriterleri ve Listeme alanı bulunmaktadır.
+Arama kriterlerinde listelenmesi istenen alarmın adı girilir ve durumu `Aktif`, `Aktif değil` veya `Hepsi` olarak seçilebilmektedir.
+Liste alanında oluşturulmuş olan alarmların `Ad`, `Metrik Kuralı`, `Nesne Kuralı`, `Zaman Aralığı`, `Kural İhlali Eşik Değeri`, `Önceki Alarm Temizlenmeden Yeni Alarm Gönderme`, `Zaman Aralığı İçerisinde Kural İhlali Kalmadığında Alarmı Temizle`, `Kural İhlali Sayısına Göre Alarmı Temizle` ve `Durum` bilgileri listelenmektedir.
+Alarm bilgilerinin solunda alarm bilgilerinin detay bilgilerinin listelendiği Görüntüle butonu ve alarmı güncellemek için Güncelle butonları bulunmaktadır.
+Sayfanın altında Yeni Alarm Tanımı Oluştur butonuna tıklanarak yeni alarm oluşturma ekranı açılır.
+
+=== Kural
+
+Alarm Tanımı Oluştur ekranında `Kural Ekle` butonuna basılarak Metrik veya Entity ekleme işlemi yapılmaktadır.
+Nesne türü kadar Entity eklenebilir.
+Burada bir adet metrik kuralı seçilmesi zorunludur.
+Seçilmemesi durumunda `Bir metrik kuralını seçmek zorundasınız.` uyarısı görüntülenir.
+Metrik seçiliyken Metrik Kuralı alanından `Ortalama Cevap Süresi`, `Hatalı İstek Sayısı` ve `Toplam İstek Sayısı` seçimleri yapılmaktadır.
+Seçilen herhangi bir alan için Eşik Değeri alanından `Küçüktür`, `Büyüktür`, `Büyüktür veya eşittir`, `Küçüktür veya eşittir` alanlarından birisi seçilir girilen değerlere göre alarm oluşması sağlanmaktadır. +
+
+*Örnek* +
+Metrik Kuralı -> Toplam İstek Sayısı seçili olsun. +
+Eşik Değer -> Büyüktür 2 seçilmiş olsun, zaman aralığı değeri de 10 girildiğini varsayalım. +
+İstek sayısı 2’ yi geçtiğinde belirtilen zaman aralığında alarm oluşturulacağı anlamına gelir. +
+Entity seçiliyken Nesne Türü alanından `API`, `API Kullanıcısı`, `Organizasyon`, `Plan` alanları seçilmektedir. +
+Seçilen alana göre oluşturulan Nesneler seçilmektedir.
+Bu nesneler seçilen nesne türlerinin kendi ekranlarından oluşturulmaktadır.
+
+- Ad -> Oluşturulacak olan alarmın adı anlamına gelmektedir.
+- Durum -> Oluşturulan alarmın `Aktif` veya `Aktif değil` alanları seçilmektedir.
+- Zaman Aralığı-> Girilen dakika içerisinde bu alarm kuralları dikkate alınır.
+- Kural İhlali -> ilgili alarmın kaç kural ihlali sonrasında oluşturulacağı anlamına gelmektedir.
+
+Önceki alarm temizlenmeden yeni alarm gönderme checkbox’ı seçili olduğunda oluşturulmuş bir alarmın Alarm Temizleme Bildirimleri tabında girilen alarm bilgilerine göre oluşturulan Alarm Temizleme Bildirimi oluştuktan sonra yeni alarmlar oluşur.
+
+`Zaman aralığı içerisinde kural ihlali kalmadığında alarm temizle` ve `Kural ihlali sayısına göre alarm temizle` radio butonlarından sadece bir tanesi seçilebilmektedir.
+`Zaman aralığı içerisinde kural ihlali kalmadığında alarm temizle` radio butonu seçili olduğunda zaman aralığı alanında girilen dakika içerisinde kural ihlali yoksa alarm temizlendi bildirimi oluşur.
+`Kural ihlali sayısına göre alarm temizle` radio butonu seçili olduğunda kural ihlali, girilen sayının altına düştüğünde alarm temizlendi bildirimi oluşur.
+
+.Alarm Tanımı Oluştur Kural Ekranı
+image::alarm_notifications_api_rule.png[Alarm Tanımı Oluştur Kural Ekranı]
+
+=== Alarm Bildirimleri
+
+Alarm Bildirimleri tabı içerisinde bildirim ekle butonuna tıklanarak seçilen `E-Posta`, `SQL Çalıştırma`, `API Çalıştırma` seçeneklerine göre alarm oluşturulur.
+Eklenen bildirimler sağ tarafta bulunan silme butonuna tıklanarak kaldırılabilmektedir.
+
+==== E-Posta
+
+- Hedef E-Postaları -> Alarm bildiriminin gönderilmesi istenilen e-posta adresleri girilmektedir.
+- E-Posta Konusu -> Alarm bildirimi konusu girilmektedir.
+- E-Posta Gövdesi -> Alarm bildiriminin içeriği girilmektedir.
+Burada oluşturulacak alarm içerisinde bazı değerler gönderilebilmektedir.
+Bunlar şu şekildedir;
+
+* uuid -> Benzersiz anahtar anlamını taşır.
+* alarm -> ${alarm.timeIntervalInMinutes}, ${alarm.violationThreshold}
+* Nesne Türü olarak Api seçilmiş ise ${api.id}, ${api.name} şeklinde değerler ifade edilmektedir.
+* Nesne Türü olarak Api Kullanıcısı seçilmiş ise ${apiConsumer.id}, ${apiCustomer.name} şeklinde değerler ifade edilmektedir.
+* Nesne Türü olarak Organizasyon seçilmiş ise ${organization.id}, ${organization.name} şeklinde değerler ifade edilmektedir.
+* Nesne Türü olarak Plan seçilmiş ise ${plan.id}, ${plan.name} şeklinde değerler ifade edilmektedir.
+* apiMetricResult.occurrences denilerek ilgili dakika ve occourence değerlerine ulaşılabilmektedir.
+
+*Alarm oluşma zamanları*
+
+```
+<#list apiMetricResult.occurrences?keys as k> ${k?number_to_datetime} </#list>
+```
+
+*Alarm oluşması ile ilgili değerler*
+
+```
+<#list apiMetricResult.occurrences?values as v> ${v.totalResponseTime},${v.requestCount},${v.errorCount} </#list>uuid
+```
+
+*Örnek E-Posta Şablonları*
+
+```
+${api.name} apisinin ${alarm.violationThreshold} threshold değeri aşılmıştır.
+occurence zamanları <#list apiMetricResult.occurrences?keys as k> ${k?number_to_datetime} </#list> occurence değerleri <#list apiMetricResult.occurrences?values as v> ${v.totalResponseTime},${v.requestCount},${v.errorCount} </#list>uuid şu dakika aralığında ${alarm.timeIntervalInMinutes}.occurrences
+```
+
+```
+"organization": "${organization.name}", "violationThreshold": "${alarm.violationThreshold}", "mapkey": "<#list apiMetricResult.occurrences?keys as k> ${k?number_to_datetime} ${k?number_to_date} ${k?number_to_time} </#list>", "mapvalue": "<#list apiMetricResult.occurrences?values as v> ${v.totalResponseTime},${v.requestCount},${v.errorCount} </#list>", "dakika":"${alarm.timeIntervalInMinutes}
+```
+
+.Alarm Bildirimleri E-Posta Ekranı
+image::alarm_notifications_email.png[Alarm Bildirimleri E-Posta Ekranı]
+
+==== SQL Çalıştırma
+
+SQL Kodu alanına girilen SQL’in çalıştırılması istenilen veritabanı Veritabanı combobox'ından seçilmektedir.
+SQL Kodu alanında veritabanı alanından seçilen veritabanı bilgisine uygun SQL yazılmaktadır.
+Index ve Değer alanında ise girilen SQL içerisinde kaç adet parametre varsa o kadar alan açılmaktadır ve sırasıyla giriş yapılmaktadır.
+
+*Örnek SQL Çalıştırmaları*
+
+- INSERT INTO CAT_API VALUES (?, ?, ?)
+
+[cols="3a, 3a",options=header]
+|===
+|INDEX
+|DEĞER
+
+|1
+|${uuid}
+
+|2
+|${alarm.violationThreshold}
+
+|3
+|${api.name}
+
+|===
+
+[[purchase-req]]
+- INSERT INTO SCHEMA_NAME.ALARM_NOTIFICATIONS (ID, TYPE, ALARM_NAME, TIME_STAMP, ALARM_DESCRIPTION) VALUES (?, 1, 'GENERAL_FAILED_REQUEST_ALARM', SYSDATE, ?)
+
+[cols="3a, 3a",options=header]
+|===
+|INDEX
+|DEĞER
+
+|1
+|${uuid}
+
+|2
+|${alarm.violationThreshold}
+
+|===
+
+.Alarm Bildirimleri SQL Çalıştırma Ekranı
+image::alarm_notifications_sql.png[Alarm Bildirimleri SQL Çalıştırma Ekranı]
+
+==== API Çağrımı
+
+İstek Metodu alanında `GET`, `POST`, `DELETE`, `PUT`, `PATCH` seçeneklerine göre API metodu seçilebilmektedir.
+İstek URL alanında ilgili API URL bilgisi girilmektedir.
+
+*Örnek İstek Gövdesi*
+
+```
+{
+"organization": "${organization.name}",
+"violationThreshold": "${alarm.violationThreshold}",
+"mapkey": "<#list apiMetricResult.occurrences?keys as k> ${k?number_to_datetime} ${k?number_to_date} ${k?number_to_time} </#list>",
+"mapvalue": "<#list apiMetricResult.occurrences?values as v> ${v.totalResponseTime},${v.requestCount},${v.errorCount} </#list>",
+"dakika":"${alarm.timeIntervalInMinutes}"
+}
+```
+
+=== Alarm Temizlendi Bildirimleri
+
+Alarm Temizlendi Bildirimleri tabı içerisinde bildirim ekle butonuna tıklanarak seçilen `E-Posta`, `SQL Çalıştırma`, `API Çalıştırma` seçeneklerine göre alarm temizlendi bildirimi oluşturulur.
+
+==== E-Posta
+
+Hedef E-Postaları -> Alarm bildiriminin gönderilmesi istenilen e-posta adresleri girilmektedir. +
+E-Posta Konusu -> Alarm bildirimi konusu girilmektedir. +
+E-Posta Gövdesi -> Alarm bildiriminin içeriği girilmektedir.
+Burada oluşturulacak alarm içerisinde bazı değerler gönderilebilmektedir.
+
+*Örnek E-Posta şablonu*
+
+```
+{
+${api.name} apisinin ${alarm.violationThreshold} threshold değeri aşılmıştır.
+occurrences zamanları
+<#list apiMetricResult.occurrences?keys as k> ${k?number_to_datetime} </#list>
+occurrences değerleri
+<#list apiMetricResult.occurrences?values as v> ${v.totalResponseTime},${v.requestCount},${v.errorCount} </#list>
+uuid şu dakika aralığında
+${alarm.timeIntervalInMinutes}.occurrences
+}
+```
+
+.Alarm Temizlendi Bildirimleri E-Posta
+image::alarm_clear_notifications_email.png[Alarm Temizlendi Bildirimleri E-Posta]
+
+==== SQL Çalıştırma
+
+SQL Kodu alanına girilen SQL’in çalıştırılması istenilen veritabanı Veritabanı combobox'ından seçilmektedir.
+SQL Kodu alanında veritabanı alanından seçilen veritabanı bilgisine uygun SQL yazılmaktadır.
+Index ve Değer alanında ise girilen SQL içerisinde kaç adet parametre varsa o kadar alan açılmaktadır ve sırasıyla giriş yapılmaktadır.
+
+.Alarm Temizlendi Bildirimleri SQL Çalıştırma
+image::alarm_clear_notifications_sql.png[Alarm Temizlendi Bildirimleri SQL Çalıştırma]
+
+==== API Çağrımı
+
+İstek Metodu alanında `GET`, `POST`, `DELETE`, `PUT`, `PATCH` seçeneklerine göre API metodu seçilebilmektedir.
+İstek URL alanında ilgili API URL bilgisi girilmektedir.
+
+*Örnek İstek Gövdesi*
+
+```json
+{
+"organization": "${organization.name}",
+"violationThreshold": "${alarm.violationThreshold}",
+"mapkey": "<#list apiMetricResult.occurrences?keys as k> ${k?number_to_datetime} ${k?number_to_date} ${k?number_to_time} </#list>",
+"mapvalue": "<#list apiMetricResult.occurrences?values as v> ${v.totalResponseTime},${v.requestCount},${v.errorCount} </#list>",
+"dakika":"${alarm.timeIntervalInMinutes}"
+}
+```
+
+.Alarm Temizlendi Bildirimleri API Çağrım
+image::alarm_clear_notifications_api_rule.png[Alarm Temizlendi Bildirimleri API Çağrım]
+
