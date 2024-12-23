@@ -30,11 +30,14 @@ image::organization_sync_feature.png[Organizasyon Senkronizasyon]
 === API Listeleme Ekranı
 
 Menüden API'leri görüntülemek için "API" alanına tıklayarak ulaşılabilir.
-Arama kriterlerine göre istenilen değer girildiğinde aşağıdaki api'ler listelenir.
+Arama kriterlerine göre örneğin ortak kod seçilerek ya da istenilen değer girildiğinde aşağıdaki api'ler listelenir.
 Kullanıcı ”Temizle” butonuna tıklayarak arama kriterlerini temizleyebilir.
 “Kapat” butonuna tıklayarak kullanıcı Ana Menüye dönüş yapabilir.
 Her apinin solunda bulunan "Güncelle" butonuna tıklayarak mevcut API üzerinde değişiklikler yapılabilir.
 Her apinin solunda bulunan "Görüntüle" butonuna tıklayarak da mevcut API 'nin değerleri görülebilir.
+Her apinin solunda bulunan "İndir" butonuna tıklayarak da mevcut API indirilebilir.
+Yeni Api Yükle butonu ile api import edilebilir.
+Eğer Yeni API yüklenirken mevcut ile aynı API var ise "Bu kayıt zaten mevcut. İlgili kaydı güncellemeyi onaylıyor musunuz?" uyarsı gösterilip onay istenir.
 Ayrıca yine her apinin solunda bulunan "Kopyala" butonuna tıklayarak da mevcut API 'nin değerleri kopyalanarak yeniden bir API oluşturulabilir.
 
 .API Listeleme Ekranı
@@ -60,6 +63,25 @@ GET, POST, DELETE, PUT, PATCH gibi seçenekler bulunur.
 
 .API Oluşturma Ekranı
 image::api_create.png[API Oluşturma Ekranı]
+
+=== API Güncelleme Ekranı
+
+Kullanıcı API Listeleme ekranında yer alan “Güncelle” butonuna tıklayarak API güncelleme sayfasına yönlendirilir ve  izin verilen kurallar çervesinde güncelleme yapabilir.
+Kaydetmeden çıkış yapılmak istenirse kullanıcı uyarılır ve onay istenir.
+
+.API Güncelleme Ekranı
+image::api_update.png[API Güncelleme Ekranı]
+
+.Kaydetmeden Api'den Ayrıl İletişim Kutusu
+image::leave_api_without_saving_dialog.png[Kaydetmeden Api'den Ayrıl İletişim Kutusu]
+
+=== API Yükleme Ekranı
+
+Kullanıcı API Listeleme ekranında yer alan “Yeni API Yükle” butonuna tıklayarak aşağıda görünen Yeni Apı Yükle ekranında yeni api için oluşturma dosyasını yükleyerek işlemi yapabilir.
+
+
+.Yeni API Yükle Oluşturma Ekranı
+image::api_import.png[Yeni API Yükle Oluşturma Ekranı]
 
 === API Senkronizasyonuyla Tek Noktadan Yönetim
 Yeni bir API oluşturulduğunda veya var olan bir API güncellendiğinde, uygulama birden fazla siteda çalışıyorsa, açılan popup içinde her site için ayrı bir buton ile senkronizasyon işlemi yapılabilir.
@@ -405,15 +427,21 @@ image::plan_sync_feature.png[Plan Senkronizasyon]
 
 Uygulamada kullanılacak veri kaynakları (veritabanı bağlantıları) ayarları burada yapılır.
 Bu veritabanlarına daha sonra js ve groovy kodları kullanılarak erişilir.
+Oluşturulmuş Veri Kaynağı indirilebilir.
+"Yeni Veri Kaynağı Yükle" butonu ile veri kaynağı import edilebilir.
+Eğer Yeni Veri Kaynağı yüklenirken mevcut ile aynı veri kaynağı var ise "Bu kayıt zaten mevcut. İlgili kaydı güncellemeyi onaylıyor musunuz?" uyarsı gösterilip onay istenir.
 
 .Veri Kaynakları Listeleme
-image::datasource_definitions_01.jpeg[Veri Kaynakları Listeleme]
+image::datasource_definitions_01.png[Veri Kaynakları Listeleme]
 
 .Veri Kaynakları Görüntüleme
 image::datasource_definitions_02.jpeg[Veri Kaynakları Görüntüleme]
 
 .Veri Kaynakları Düzenleme
 image::datasource_definitions_03.jpeg[Veri Kaynakları Düzenleme]
+
+.Veri Kaynakları Yükleme
+image::import_datasource_definitions.png[Veri Kaynakları Yükleme]
 
 === Katalog -> Katalog Ayarları -> Ortak Kodlar
 
@@ -424,9 +452,14 @@ Ad, bean ismi, tip ve durum verileri ile filtrelenerek arama yapılabilir.
 
 Düzenleme ve oluşturma ekranında seçilen kod tipine göre (javascript veya groovy) aşağıda çıkan editördeki format ve
 yazı görünümü değişmektedir.
+Her ortak kodun solunda bulunan "Güncelle" butonuna tıklayarak mevcut ortak kod üzerinde değişiklikler yapılabilir.
+Her ortak kodun solunda bulunan "Görüntüle" butonuna tıklayarak da mevcut ortak kod 'nin değerleri görülebilir.
+Her ortak kodun solunda bulunan "İndir" butonuna tıklayarak da mevcut ortak kod indirilebilir.
+Her ortak kodun solunda bulunan "İndir" butonuna tıklayarak da mevcut ortak kod indirilebilir.
+Yeni Kod Yükle butonu ile ortak kod import edilebilir durumu" Aktif değil" olarak eklenir.
 
 .Ortak Kodlar Listeleme
-image::shared_codes_01.jpeg[Ortak Kodlar Listeleme]
+image::shared_codes_01.png[Ortak Kodlar Listeleme]
 
 
 ==== Groovy Ortak Kod
@@ -438,6 +471,8 @@ image::shared_codes_04.jpeg[Ortak Kodlar Groovy Görüntüleme]
 .Ortak Kodlar Groovy Düzenleme
 image::shared_codes_05.jpeg[Ortak Kodlar Groovy Düzenleme]
 
+.Ortak Kodlar Yeni Ortak Kod Yükleme
+image::import_shared_code.png[Ortak Kodlar Yeni Ortak Kod Yükleme]
 
 ==== JavaScript Ortak Kod
 
@@ -495,13 +530,19 @@ image::shared_codes_09.jpeg[Ortak Kodlar Header Rule Script JavaScript Düzenlem
 Kullanıcılar, Bir özellik tanımı yapılarak API'de, Api Kullanıcılarında, Organizasyonda ve Plan'da gösterebilirler.
 Aşağıdaki ekrandan yeni bir özellik tanımlarken hangi entity için olduğunu seçilmektedir.
 Örneğin API Kullanıcısının üzerine ilgili partnerin telefon numarasını email adresini vs custom özellik olarak eklenebilir.
+özellik tanımının solunda bulunun "indir" butonu ile özellik tanımı indirilebilir.
+"Yeni Özellik Tanımı oluştur" butonu ile özellik tanımı yüklenebilir.
+Eğer Yeni Özellik tanımı yüklenirken mevcut ile aynı özellik tanımı var ise "Bu kayıt zaten mevcut. İlgili kaydı güncellemeyi onaylıyor musunuz?" uyarsı gösterilip onay istenir.
 Bu ekrandan eklediğiniz tanımlar ilgili entityleri düzenlerken sayfada input olarak görülür.
 
 Bu kısım raporlama amaçlı belirli alanları tutmak için de kullanılabilir.
 
 
 .Özellik Tanımları Listeleme
-image::attribute_definitions_01.jpeg[Özellik Tanımları Listeleme]
+image::attribute_definitions_01.png[Özellik Tanımları Listeleme]
+
+.Özellik Yükleme
+image::import_attribute_definitions.png[Özellik Yükleme]
 
 .Özellik Tanımları Düzenleme
 image::attribute_definitions_02.jpeg[Özellik Tanımları Düzenleme]
