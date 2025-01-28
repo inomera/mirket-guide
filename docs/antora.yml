@@ -1,7 +1,7 @@
 name: mirket-guide
 title: Mirket Kılavuzu
-version: v4.8.x
-display_version: v4.8.x
+version: v4.9.x
+display_version: v4.9.x
 start_page: introduction.adoc
 nav:
   - modules/ROOT/nav.adoc
