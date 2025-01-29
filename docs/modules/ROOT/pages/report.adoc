@@ -11,7 +11,7 @@ image::report_near_real_time.png[Gerçek zamanlıya yakın giriş raporu]
 API bilgileri, zaman aralığı (Günlük,Aylık) ve tarih kriterlerine göre filtrelenip "Ara" butonuyla kullanımlar listelenmektedir. Rapor, aynı anda birden fazla sitenin verilerini görüntüleyebilme özelliğine sahiptir. Her site için kullanım verileri grafikte farklı renklerle gösterilir.
 
 .API Kullanım Raporu Ekranı
-image::api_usage_report.png[API Kullanım Raporu Ekranı]
+image::report/api_usage_report.png[API Kullanım Raporu Ekranı]
 
 Grafik görünümünde:
 Her site için ayrı bir veri serisi gösterilir
@@ -22,7 +22,7 @@ Siteler arası karşılaştırmalı analiz yapılabilir
 API Kullanım raporunun müşteri bazlı listelendiği rapordur. Çoklu site desteği sayesinde farklı sitelerdeki müşteri kullanımları tek bir raporda görüntülenebilir.
 
 .Müşteri Kullanım Raporu Ekranı
-image::api_consumers_usage_report.png[Müşteri Kullanım Raporu Ekranı]
+image::report/api_consumers_usage_report.png[Müşteri Kullanım Raporu Ekranı]
 
 Rapor özellikleri:
 Müşteri bazlı kullanım verilerini site kırılımında gösterir
@@ -33,7 +33,7 @@ Her site için müşteri kullanım trendleri izlenebilir
 API bazlı cevap süresi, zaman aralığı (Günlük,Aylık) ve tarih kriterlerine göre filtrelenip "Ara" butonuyla sürelerin görüldüğü rapordur. Sistem, birden fazla sitenin API cevap sürelerini aynı grafikte karşılaştırmalı olarak gösterebilmektedir.
 
 .API Cevap Süresi Raporu Ekranı
-image::api_response_time_report.png[API Cevap Süresi Raporu Ekranı]
+image::report/api_response_time_report.png[API Cevap Süresi Raporu Ekranı]
 
 Cevap süresi raporunda:
 Her site için ortalama cevap süreleri ayrı serilerde gösterilir

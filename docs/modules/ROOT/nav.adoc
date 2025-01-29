@@ -12,7 +12,5 @@
 
 * xref:settings.adoc[Ayarlar]
 
-* xref:system-setup.adoc[Sistem Kurulumu]
-
 * xref:sample-codes.adoc[Örnek Kodlar]
 
