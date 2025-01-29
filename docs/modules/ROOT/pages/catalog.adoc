@@ -8,40 +8,45 @@ Kullanıcı, ”Temizle” butonuna tıklayarak arama kriterlerini temizleyebili
 “Kapat” butonuna tıklayarak kullanıcı Ana Menüye dönüş yapabilir.
 Her organizasyonun solunda bulunan "Güncelle" butonuna tıklayarak da mevcut organizasyon üzerinde değişiklikler yapılabilir.
 
-image::organization_list.png[Organizasyon Listeleme Ekranı]
+image::organization/organization_list.png[Organizasyon Listeleme Ekranı]
 
 === Organizasyon Oluşturma Ekranı
 
 Kullanıcı, Organizasyon Listeleme ekranında yer alan “Organizasyon Oluştur” butonuna tıklayarak aşağıdaki ekran alıntısında görüldüğü gibi yeni organizasyon oluşturabilir.
+Ad, alanı zorunludur. Sistem genelinde eşsiz değere sahiptir.
+Anahtar, organizasyonun eşsiz değeridir. Ad alanından otomatik türemektedir.
+Domain, organizasyon API lerinin internet adresidir. Domain, tanımı eşsizdir. Bir organizasyon için birden fazla tanım yapılabilir.
+Durum, organizasyonun durumunu temsil eder.
+
 “İptal” butonuna tıklayarak kullanıcı Organizasyon Listeleme ekranına dönüş yapabilir.
 
 .Organizasyon Oluşturma Ekranı
-image::organization_create.png[Organizasyon Oluşturma Ekranı]
+image::organization/organization_create.png[Organizasyon Oluşturma Ekranı]
 
 === Organizasyon Senkronizasyonuyla Tek Noktadan Yönetim
-Yeni bir Organizasyon oluşturulduğunda veya var olan bir Organizasyon güncellendiğinde, uygulama birden fazla siteda çalışıyorsa, açılan popup içinde her site için ayrı bir buton ile senkronizasyon işlemi yapılabilir.
-Burada kullanıcı Organizasyon senkronize etmek zorunda değildir. Kapat tuşuna basarak diğer site(larda) manuel oluşturmayı tercih edebilir.
+Yeni bir Organizasyon oluşturulduğunda veya var olan bir Organizasyon güncellendiğinde, uygulama birden fazla site da çalışıyorsa, açılan popup içinde her site için ayrı bir buton ile senkronizasyon işlemi yapılabilir.
+Kullanıcı organizasyon senkronize etmek zorunda değildir. Kapat tuşuna basarak diğer site(larda) manuel oluşturmayı tercih edebilir.
 
 .Organizasyon Senkronizasyon
-image::organization_sync_feature.png[Organizasyon Senkronizasyon]
+image::organization/organization_sync_feature.png[Organizasyon Senkronizasyon]
 
 == Katalog -> API
 
 === API Listeleme Ekranı
 
 Menüden API'leri görüntülemek için "API" alanına tıklayarak ulaşılabilir.
-Arama kriterlerine göre örneğin ortak kod seçilerek ya da istenilen değer girildiğinde aşağıdaki api'ler listelenir.
-Kullanıcı ”Temizle” butonuna tıklayarak arama kriterlerini temizleyebilir.
+Arama kriterleri seçilerek filtreleme, listeleme işlemleri yapılabilir.
+”Temizle” butonuna tıklayarak arama kriterleri temizlenir.
 “Kapat” butonuna tıklayarak kullanıcı Ana Menüye dönüş yapabilir.
-Her apinin solunda bulunan "Güncelle" butonuna tıklayarak mevcut API üzerinde değişiklikler yapılabilir.
-Her apinin solunda bulunan "Görüntüle" butonuna tıklayarak da mevcut API 'nin değerleri görülebilir.
-Her apinin solunda bulunan "İndir" butonuna tıklayarak da mevcut API indirilebilir.
-Yeni Api Yükle butonu ile api import edilebilir.
+Her apinin solunda bulunan "Güncelle" butonuna tıklayarak mevcut API için düzenleme sayfasına geçiş yapılır. Düzenleme sayfasında değişiklikler yapılabilir.
+Her apinin solunda bulunan "Görüntüle" butonuna tıklayarak da mevcut API 'nin özet temel bilgileri görüntülenir.
+Her apinin solunda bulunan "İndir" butonuna tıklayarak da mevcut API bson formatında indirilebilir.
+Yeni Api Yükle butonu ile daha önce indirilmiş bir api import edilebilir.
 Eğer Yeni API yüklenirken mevcut ile aynı API var ise "Bu kayıt zaten mevcut. İlgili kaydı güncellemeyi onaylıyor musunuz?" uyarsı gösterilip onay istenir.
-Ayrıca yine her apinin solunda bulunan "Kopyala" butonuna tıklayarak da mevcut API 'nin değerleri kopyalanarak yeniden bir API oluşturulabilir.
+Ayrıca yine her apinin solunda bulunan "Kopyala" butonuna tıklayarak da mevcut API 'nin değerleri kopyalanarak yeni bir API oluşturulabilir. API oluşturmak için önerilen yöntemdir.
 
 .API Listeleme Ekranı
-image::api_list.png[API Listeleme Ekranı]
+image::api/api_list.png[API Listeleme Ekranı]
 
 === API Oluşturma Ekranı
 
@@ -49,20 +54,23 @@ Kullanıcı API Listeleme ekranında yer alan “Yeni API Oluştur” butonuna t
 
 === Tanım
 
+** Basit api tanımı için zorunlu alanlar.
+
 * *Ad:*  API’nin adı girilir.
 * *Açıklama:*  API ilgili bir açıklama girilir.
-* *Durum:* API’nin durum bilgisi girilir.
+* *Durum:* API’nin durum bilgisi seçilir.
 * *Tip:* API’nin tipi seçilir.
+* *Domain:* Domain seçilir.
 REST veya SOAP seçeneklerinden birisi seçilir.
 * *Endpoint:* Gateway modülünde bu API için açılacak olan URL yazılır.
 Örneğin: "/ws/rest/v10/subscription/list" Gateway modülünde buraya girilen URL üzerinden gelen istekleri bu API ile ilişkilendirir.
 Bu bilgiler API endpointlerine bakılarak girilmelidir.
 * *Metod:*   API nin çağrılma metodu girilir.
 GET, POST, DELETE, PUT, PATCH gibi seçenekler bulunur.
-* *Asenkron mu?:*  API nin asenkron çalışması istenildiğinde bu checkbox işaretlenir. Ardından açılan Cevap Gövdesi bölümüne JSON veya XML olarak dönüş değeri girilir. Eğer checkbox işaretlenmezse API senkron olarak çalışacaktır.
+* *Yönlendirme Tabında, "Basit Yönlendirme" bölümünde Backend Http Method ve Backend Yönlendirme Adresi alanlarına değerler girilir.
 
 .API Oluşturma Ekranı
-image::api_create.png[API Oluşturma Ekranı]
+image::api/api_create.png[API Oluşturma Ekranı]
 
 === API Güncelleme Ekranı
 
@@ -70,25 +78,24 @@ Kullanıcı API Listeleme ekranında yer alan “Güncelle” butonuna tıklayar
 Kaydetmeden çıkış yapılmak istenirse kullanıcı uyarılır ve onay istenir.
 
 .API Güncelleme Ekranı
-image::api_update.png[API Güncelleme Ekranı]
+image::api/api_edit.png[API Güncelleme Ekranı]
 
 .Kaydetmeden Api'den Ayrıl İletişim Kutusu
-image::leave_api_without_saving_dialog.png[Kaydetmeden Api'den Ayrıl İletişim Kutusu]
+image::api/leave_without_saving_dialog.png[Kaydetmeden Api'den Ayrıl İletişim Kutusu]
 
 === API Yükleme Ekranı
 
 Kullanıcı API Listeleme ekranında yer alan “Yeni API Yükle” butonuna tıklayarak aşağıda görünen Yeni Apı Yükle ekranında yeni api için oluşturma dosyasını yükleyerek işlemi yapabilir.
 
-
 .Yeni API Yükle Oluşturma Ekranı
-image::api_import.png[Yeni API Yükle Oluşturma Ekranı]
+image::api/api_import.png[Yeni API Yükle Oluşturma Ekranı]
 
 === API Senkronizasyonuyla Tek Noktadan Yönetim
 Yeni bir API oluşturulduğunda veya var olan bir API güncellendiğinde, uygulama birden fazla siteda çalışıyorsa, açılan popup içinde her site için ayrı bir buton ile senkronizasyon işlemi yapılabilir.
 Burada kullanıcı API senkronize etmek zorunda değildir. Kapat tuşuna basarak diğer site(larda) manuel oluşturmayı tercih edebilir.
 
 .API Senkronizasyon
-image::api_sync_feature.png[API Senkronizasyon]
+image::api/api_sync_feature.png[API Senkronizasyon]
 
 === Yönlendirme
 
@@ -143,7 +150,7 @@ Bu şekilde bir yazımı bulunuyor ve elindeki xml'e göre değişiyor. /booksto
 *** *İş Nesnesi Özelliği:* API, API Kullanıcısı, Plan veya Organizasyon'daki özelliklerden birisini Header olarak göndermek için kullanılır.
 
 .Yük Dağıtımı ile Yönlendirme
-image::api_load_distribution.png[Yük Dağıtımı ile Yönlendirme]
+image::api/api_load_distribution.png[Yük Dağıtımı ile Yönlendirme]
 
 ==== Groovy Kodu Çalıştırılması
 
@@ -216,7 +223,7 @@ Hata veri dönüşümü JavaScript kodu ile yapılır.
 ==== API İsteği Başlıkları
 
 .API İsteği Başlıkları Oluşturma Ekranı
-image::api_request_header.png[API İsteği Başlıkları Oluşturma Ekranı]
+image::api/api_request_header.png[API İsteği Başlıkları Oluşturma Ekranı]
 
 * *API İsteği Başlıkları:* API isteğinin gönderileceği backend sistem request header'a bir parametre eklemesini istiyorsa api isteği başlıkları kısmı kullanılır.
 
@@ -245,9 +252,15 @@ Bu şekilde bir yazımı bulunuyor ve elindeki xml'e göre değişiyor. /booksto
 
 Önbelleği aktifleştir checkbox'ı işaretlendiğinde önbellek aktif hale gelir ve kullanıcıdan önbelleğin zaman aşımı değerini saniye cinsinden girilmesi beklenir.
 
+.API Cache Tabı
+image::api/api_cache.png[API Cache Tabı]
+
 === Test
 
 API 'nin tüm değerleri doldurulup API oluşturduktan sonra API, "Test" sekmesi üzerinden ilgili değerler girildikten sonra tetiklenebilir.
+
+.API Test Tabı
+image::api/api_test.png[API Test Tabı]
 
 ==== İstek
 
@@ -286,7 +299,7 @@ Kullanıcı “Temizle” butonuna tıklayarak arama kriterlerini temizleyebilir
 Her api kullanıcısının solunda bulunan "Güncelle" butonuna tıklayarak da mevcut api kullanıcıları üzerinde değişiklikler yapılabilir.
 
 .API Kullanıcıları Listeleme Ekranı
-image::api_users_list.png[API Kullanıcıları Listeleme Ekranı]
+image::consumer/api_consumer_list.png[API Kullanıcıları Listeleme Ekranı]
 
 === API Kullanıcısı Oluşturma Ekranı
 
@@ -294,19 +307,21 @@ Kullanıcı, API Kullanıcısı Listeleme ekranında yer alan “API Kullanıcı
 Form alanları aşağıdaki kurallara göre doldurulur ve Kaydet butonuna basılarak API Kullanıcısı oluşturulur.
 İptal butonuna basıldığında, API Kullanıcıları Listeleme ekranına dönüş yapılır.
 
+Temel olarka üç(3) adet tab den olışmaktadır.
+
 .API Kullanıcısı Oluşturma Ekranı
-image::api_user_create.png[API Kullanıcısı Oluşturma Ekranı]
+image::consumer/api_consumer_create.png[API Kullanıcısı Oluşturma Ekranı]
+
+==== Tanım
 
 * *Ad:*  API Kullanıcısının ismi girilir.
 * *Durum:* API Kullanıcısının durum bilgisi girilir.
 * *Organizasyon:* API Kullanıcısının bağlı olacağı Organizasyon bilgisi seçilir.
-* *IP Kısıtlamaları:* Mirket'e gelen istekleri IP bazlı kısıtlamak isteniyorsa bu kısım kullanılır.
-İş ortağının gelmesi beklenen IP bilgileri bu kısma girilir.
 
 .API Kullanıcısı Kimlik Doğrulama Yöntemleri
-image::api_consumers_authentication_strategy.png[Kimlik Doğrulama Yöntemleri]
+image::consumer/api_consumer_auth_strategies.png[Kimlik Doğrulama Yöntemleri]
 
-* *Kimlik Doğrulama yöntemleri:*
+* *Kimlik Doğrulama yöntemleri*
 
 ** *Temel Kimlik Doğrulama:* Temel kimlik doğrulama seçildiğinde gelen username ve password'ün base64 hash'inin alınıp authorization headerına koyulmasıdır.
 DeFacto bir yöntemdir.
@@ -326,13 +341,40 @@ Parametreye bu bilgiler örnekte gösterildiği gibi girilerek istek gönderileb
 ** *İstek Gövdesinde Kullanıcı Adı & Şifre:* İlk adımda Json Path veya XPath sorgu dillerinden birini seçerek ilerleyin. Sonrasında kimlik doğrulama için gerekli olan kullanıcı bilgilerini (kullanıcı adı ve şifre) ve bu bilgilerin istek gövdesindeki konumlarını belirtin.
 ** *İstek Gövdesinde API Key:* Sistem, istek gövdesinde bulunan Basic Auth dizesini belirlenen XPATH veya JSONPATH üzerinden tespit eder. Bulunan dize çözümlenerek (decode edilerek) içerisindeki kullanıcı adı ve şifre bilgileri elde edilir.
 
+.API Kullanıcısı İstek Gövdesinde API Key
+image::consumer/api_consumer_auth_jsonpath.png[API Kullanıcısı İstek Gövdesinde API Key JsonPath]
+
+==== Kısıtlamalar
+
+Tüm kısıtlamalar opsiyoneldir.
+
+* *IP Kısıtlamaları:* Mirket'e gelen istekleri IP bazlı kısıtlamak isteniyorsa bu kısım kullanılır.
+İş ortağının gelmesi beklenen IP bilgileri bu kısma girilir.
+Kara Liste ve Beyaz Liste mantığında çalışmaktadır.
+
+* *Zaman Bazlı Erişim Kısıtlaması:*
+API Kullanıcısının belirlenen zaman aralığında sistem erişmesi kısıtlamak için kullanılır.
+Örnek : API Kullanıcısının eriştiği API lerde bakım yapılacaktır.
+
+.API Kullanıcısı Kısıtlamalar Tabı
+image::consumer/api_consumer_restrictions.png[API Kullanıcısı Kısıtlamalar]
+
+==== Hata Kodları
+
+API Kullanıcı bazlı hata kodlarını özelleştirmek için kullanılır.
+
+.API Kullanıcısı Hata Kodları
+image::consumer/api_consumer_error_codes.png[API Kullanıcısı Hata Kodları]
+
 === API Kullanıcısı Senkronizasyonuyla Tek Noktadan Yönetim
 Yeni bir API Kullanıcısı oluşturulduğunda veya var olan bir API Kullanıcısı güncellendiğinde, uygulama birden fazla siteda çalışıyorsa, açılan popup içinde her site için ayrı bir buton ile senkronizasyon işlemi yapılabilir.
 
 .API Kullanıcısı Senkronizasyon
-image::api_consumer_sync_feature.png[API Kullanıcısı Senkronizasyon]
+image::consumer/api_consumer_sync_feature.png[API Kullanıcısı Senkronizasyon]
 
 === API Kullanıcısı Detay Ekranı
+
+Her api kullanıcısının solunda bulunan "Görüntüle" butonuna tıklayarak da mevcut api kullanıcısına ait özet veriyi görüntüler.
 
 API Kullanıcısı detay ekranı aşağıdaki iki ana bölümden oluşmaktadır:
 
@@ -341,13 +383,11 @@ API Kullanıcısı detay ekranı aşağıdaki iki ana bölümden oluşmaktadır:
 Bu bölümde API kullanıcısına ait temel bilgiler yer alır:
 
 .API Kullanıcısı Detay Ekranı
-image::api_consumer_detail.png[API Kullanıcısı Detay Ekranı]
+image::consumer/api_consumer_detail.png[API Kullanıcısı Detay Ekranı]
 
-- **Ad:** API kullanıcısının sistem adı (Örn: ChargingContentUsageConsumer)
+- **Ad:** API kullanıcısının sistem adı (Örn: Inomera Cient)
 - **Durum:** Kullanıcının aktiflik durumu (Aktif/Pasif)
-- **Organizasyon:** Bağlı olduğu organizasyon bilgisi (Örn: ChargingContentUsageOrg)
-- **Beyaz Liste:** İzin verilen IP adresleri listesi
-- **Kara Liste:** Engellenen IP adresleri listesi
+- **Organizasyon:** Bağlı olduğu organizasyon bilgisi (Örn: Inomera)
 
 ==== Kimlik Doğrulama Yöntemleri
 
@@ -381,9 +421,11 @@ Kullanıcı “Temizle” butonuna tıklayarak arama kriterlerini temizleyebilir
 “Kapat” butonuna tıklayarak kullanıcı Ana Menüye dönüş yapabilir.
 
 Her planın solunda bulunan "Güncelle" butonuna tıklayarak da mevcut planlar üzerinde değişiklikler yapılabilir.
+Her planın solunda bulunan "Görüntüle" butonuna tıklayarak da mevcut plan özet bilgisi görüntülenir.
+Her planın solunda bulunan "Kopyalana" butonuna tıklayarak da mevcut plan verilerini referans alarak yeni bir plan oluşturma adımına geçer.
 
 .Planlar Listeleme Ekranı
-image::api_plans_list.png[Planlar Listeleme Ekranı]
+image::plan/plan_list.png[Planlar Listeleme Ekranı]
 
 === Plan Oluşturma Ekranı
 
@@ -392,7 +434,7 @@ Form alanları aşağıdaki kurallara göre doldurulur ve Kaydet butonuna basıl
 İptal butonuna basarak plan listeleme ekranına dönüş yapılır.
 
 .Plan Oluşturma Ekranı
-image::api_plan_create.png[Plan Oluşturma Ekranı]
+image::plan/plan_create.png[Plan Oluşturma Ekranı]
 
 * *Ad:*  API Kullanıcısının ismi girilir.
 * *API Kullanıcısı:* Plan yaratılacak API Kullanıcısı bilgisi seçilir.
@@ -407,7 +449,7 @@ Greedy seçilirse kullanım hakkı olabilecek en kısa süre içerisinde arttır
 API eklemek için "+API" kısmına tıklanır.
 
 .Plana API Ekleme Ekranı
-image::api_plans_restrictions.png[Plana API Ekleme Ekranı]
+image::plan/api_plans_restrictions.png[Plana API Ekleme Ekranı]
 
 * *API:*  API bilgisi seçilir.
 * *Kullanımı Kısıtlı mı?:* API'ye bir kullanım kısıtı getirilmek istenirse bu kısım kullanılır.
@@ -421,7 +463,7 @@ Yeni bir Plan oluşturulduğunda veya var olan bir Plan güncellendiğinde, uygu
 Burada kullanıcı Plan tanımını Senkronize etmek zorunda değildir. Kapat tuşuna basarak diğer site(larda) manuel oluşturmayı tercih edebilir.
 
 .Plan Senkronizasyon
-image::plan_sync_feature.png[Plan Senkronizasyon]
+image::plan/plan_sync_feature.png[Plan Senkronizasyon]
 
 === Katalog -> Katalog Ayarları -> Veri Kaynakları
 
@@ -432,16 +474,16 @@ Oluşturulmuş Veri Kaynağı indirilebilir.
 Eğer Yeni Veri Kaynağı yüklenirken mevcut ile aynı veri kaynağı var ise "Bu kayıt zaten mevcut. İlgili kaydı güncellemeyi onaylıyor musunuz?" uyarsı gösterilip onay istenir.
 
 .Veri Kaynakları Listeleme
-image::datasource_definitions_01.png[Veri Kaynakları Listeleme]
+image::catalogsettings/datasource_list.png[Veri Kaynakları Listeleme]
 
 .Veri Kaynakları Görüntüleme
-image::datasource_definitions_02.jpeg[Veri Kaynakları Görüntüleme]
+image::catalogsettings/datasource_detail.png[Veri Kaynakları Görüntüleme]
 
 .Veri Kaynakları Düzenleme
-image::datasource_definitions_03.jpeg[Veri Kaynakları Düzenleme]
+image::catalogsettings/datasource_edit.png[Veri Kaynakları Düzenleme]
 
 .Veri Kaynakları Yükleme
-image::import_datasource_definitions.png[Veri Kaynakları Yükleme]
+image::catalogsettings/import_datasource_definitions.png[Veri Kaynakları Yükleme]
 
 === Katalog -> Katalog Ayarları -> Ortak Kodlar
 
@@ -455,44 +497,40 @@ yazı görünümü değişmektedir.
 Her ortak kodun solunda bulunan "Güncelle" butonuna tıklayarak mevcut ortak kod üzerinde değişiklikler yapılabilir.
 Her ortak kodun solunda bulunan "Görüntüle" butonuna tıklayarak da mevcut ortak kod 'nin değerleri görülebilir.
 Her ortak kodun solunda bulunan "İndir" butonuna tıklayarak da mevcut ortak kod indirilebilir.
-Her ortak kodun solunda bulunan "İndir" butonuna tıklayarak da mevcut ortak kod indirilebilir.
 Yeni Kod Yükle butonu ile ortak kod import edilebilir durumu" Aktif değil" olarak eklenir.
 
 .Ortak Kodlar Listeleme
-image::shared_codes_01.png[Ortak Kodlar Listeleme]
-
+image::catalogsettings/shared_codes_list.png[Ortak Kodlar Listeleme]
 
 ==== Groovy Ortak Kod
 
 .Ortak Kodlar Groovy Görüntüleme
-image::shared_codes_04.jpeg[Ortak Kodlar Groovy Görüntüleme]
+image::catalogsettings/shared_codes_detail.png[Ortak Kodlar Groovy Görüntüleme]
 
 
 .Ortak Kodlar Groovy Düzenleme
-image::shared_codes_05.jpeg[Ortak Kodlar Groovy Düzenleme]
+image::catalogsettings/shared_codes_edit.png[Ortak Kodlar Groovy Düzenleme]
 
 .Ortak Kodlar Yeni Ortak Kod Yükleme
-image::import_shared_code.png[Ortak Kodlar Yeni Ortak Kod Yükleme]
+image::catalogsettings/import_shared_code.png[Ortak Kodlar Yeni Ortak Kod Yükleme]
 
 ==== JavaScript Ortak Kod
 
-
 .Ortak Kodlar Javascript Görüntüleme
-image::shared_codes_02.jpeg[Ortak Kodlar Javascript Görüntüleme]
+image::catalogsettings/shared_codes_02.jpeg[Ortak Kodlar Javascript Görüntüleme]
 
 
 .Ortak Kodlar Javascript Düzenleme
-image::shared_codes_03.jpeg[Ortak Kodlar Javascript Düzenleme]
-
+image::catalogsettings/shared_codes_03.jpeg[Ortak Kodlar Javascript Düzenleme]
 
 ==== Groovy Header Rule Script Ortak Kod
 
 .Ortak Kodlar Header Rule Script Groovy Görüntüleme
-image::shared_codes_10.jpeg[Ortak Kodlar Header Rule Script Groovy Görüntüleme]
+image::catalogsettings/shared_codes_10.jpeg[Ortak Kodlar Header Rule Script Groovy Görüntüleme]
 
 
 .Ortak Kodlar Header Rule Script Groovy Düzenleme
-image::shared_codes_07.jpeg[Ortak Kodlar Header Rule Script Groovy Düzenleme]
+image::catalogsettings/shared_codes_07.jpeg[Ortak Kodlar Header Rule Script Groovy Düzenleme]
 
 Groovy Remote Adres set eden script örneği;
 
@@ -518,11 +556,11 @@ public class HeaderRule implements GroovyHeaderRuleScript {
 ==== JavaScript Header Rule Script Ortak Kod
 
 .Ortak Kodlar Header Rule Script JavaScript Görüntüleme
-image::shared_codes_08.jpeg[Ortak Kodlar Header Rule Script JavaScript Görüntüleme]
+image::catalogsettings/shared_codes_08.jpeg[Ortak Kodlar Header Rule Script JavaScript Görüntüleme]
 
 
 .Ortak Kodlar Header Rule Script JavaScript Düzenleme
-image::shared_codes_09.jpeg[Ortak Kodlar Header Rule Script JavaScript Düzenleme]
+image::catalogsettings/shared_codes_09.jpeg[Ortak Kodlar Header Rule Script JavaScript Düzenleme]
 
 
 === Katalog -> Katalog Ayarları -> Özellik Tanımları
@@ -539,10 +577,13 @@ Bu kısım raporlama amaçlı belirli alanları tutmak için de kullanılabilir.
 
 
 .Özellik Tanımları Listeleme
-image::attribute_definitions_01.png[Özellik Tanımları Listeleme]
+image::catalogsettings/attribute_definition_list.png[Özellik Tanımları Listeleme]
+
+.Özellik Tanımları Oluşturma
+image::catalogsettings/attribute_definition_create.png[Özellik Tanımları Oluşturma]
 
 .Özellik Yükleme
-image::import_attribute_definitions.png[Özellik Yükleme]
+image::catalogsettings/import_attribute_definitions.png[Özellik Yükleme]
 
 .Özellik Tanımları Düzenleme
-image::attribute_definitions_02.jpeg[Özellik Tanımları Düzenleme]
+image::catalogsettings/attribute_definition_edit.png[Özellik Tanımları Düzenleme]

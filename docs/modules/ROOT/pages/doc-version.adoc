@@ -43,6 +43,11 @@
 |Inomera
 |13.12.2024
 |Yedinci sürüm
+
+|8
+|Inomera
+|13.12.2024
+|Sekizinci sürüm (4.9.2)
 |===
 
 === Kısaltmalar / Muadiller

@@ -689,8 +689,8 @@ SoapUI veya benzeri bir SOAP Client üzerinden `http://localhost:12102/idempoten
    <soapenv:Header/>
    <soapenv:Body>
       <wsdl:getGenres>
-         <username>ttm_ios</username>
-         <password>l1st4n_7he_mu5ic!</password>
+         <username>mirket</username>
+         <password>mirket123!</password>
          <!--Optional:-->
          <cdata>1</cdata>
       </wsdl:getGenres>
@@ -2729,7 +2729,7 @@ Aşağıdaki bilgiler doldurulur:
 ====
 
 .API Kullanıcısı Oluşturma
-image::api_consumer_create.png[API Kullanıcısı Oluşturma]
+image::consumer/api_consumer_create.png[API Kullanıcısı Oluşturma]
 
 ==== Asenkron API Bildirim Yeniden Denemesi
 
@@ -2755,7 +2755,7 @@ Aşağıdaki bilgiler doldurulur:
 ====
 
 .Plan Oluşturma
-image::plan_create.png[Plan Oluşturma]
+image::plan/plan_create.png[Plan Oluşturma]
 
 .Plana API Ekleme
 image::notif_retry_plan_api_create.png[Plana API Ekleme]
@@ -2802,7 +2802,7 @@ Aşağıdaki bilgiler doldurulur:
 ====
 
 .Plan Oluşturma
-image::plan_create.png[Plan Oluşturma]
+image::plan/plan_create.png[Plan Oluşturma]
 
 .Plana API Ekleme
 image::notif_proxy_plan_api_create.png[Plana API Ekleme]
