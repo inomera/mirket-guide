@@ -39,7 +39,7 @@ Arama kriterleri seçilerek filtreleme, listeleme işlemleri yapılabilir.
 ”Temizle” butonuna tıklayarak arama kriterleri temizlenir.
 “Kapat” butonuna tıklayarak kullanıcı Ana Menüye dönüş yapabilir.
 Her apinin solunda bulunan "Güncelle" butonuna tıklayarak mevcut API için düzenleme sayfasına geçiş yapılır. Düzenleme sayfasında değişiklikler yapılabilir.
-Her apinin solunda bulunan "Görüntüle" butonuna tıklayarak da mevcut API 'nin özet temek bilgileri görüntülenir.
+Her apinin solunda bulunan "Görüntüle" butonuna tıklayarak da mevcut API 'nin özet temel bilgileri görüntülenir.
 Her apinin solunda bulunan "İndir" butonuna tıklayarak da mevcut API bson formatında indirilebilir.
 Yeni Api Yükle butonu ile daha önce indirilmiş bir api import edilebilir.
 Eğer Yeni API yüklenirken mevcut ile aynı API var ise "Bu kayıt zaten mevcut. İlgili kaydı güncellemeyi onaylıyor musunuz?" uyarsı gösterilip onay istenir.
@@ -67,7 +67,7 @@ REST veya SOAP seçeneklerinden birisi seçilir.
 Bu bilgiler API endpointlerine bakılarak girilmelidir.
 * *Metod:*   API nin çağrılma metodu girilir.
 GET, POST, DELETE, PUT, PATCH gibi seçenekler bulunur.
-* *Yölendirme Tab içerisinde "Basit Yönlendirme" Backend Http Method ve Backend Yönlendirme Adresi alanları değerler girilir.
+* *Yönlendirme Tabında, "Basit Yönlendirme" bölümünde Backend Http Method ve Backend Yönlendirme Adresi alanlarına değerler girilir.
 
 .API Oluşturma Ekranı
 image::api/api_create.png[API Oluşturma Ekranı]
