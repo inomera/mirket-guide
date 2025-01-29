@@ -47,7 +47,7 @@
 |8
 |Inomera
 |13.12.2024
-|Sekizin sürüm (4.9.2)
+|Sekizinci sürüm (4.9.2)
 |===
 
 === Kısaltmalar / Muadiller
