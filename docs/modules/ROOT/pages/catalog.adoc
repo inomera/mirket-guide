@@ -307,7 +307,7 @@ Kullanıcı, API Kullanıcısı Listeleme ekranında yer alan “API Kullanıcı
 Form alanları aşağıdaki kurallara göre doldurulur ve Kaydet butonuna basılarak API Kullanıcısı oluşturulur.
 İptal butonuna basıldığında, API Kullanıcıları Listeleme ekranına dönüş yapılır.
 
-Temel olarka üç(3) adet tab den olışmaktadır.
+Temel olarak üç(3) adet tab den olışmaktadır.
 
 .API Kullanıcısı Oluşturma Ekranı
 image::consumer/api_consumer_create.png[API Kullanıcısı Oluşturma Ekranı]
